@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, useWindowDimensions, FlatList } from 'react-na
 
 const DATA = Array.from({ length: 20 }, (_, i) => ({
     id: i.toString(),
-    uri: `https://picsum.photos/400?random=${i}`,
+    uri: `https://picsum.photos/400/400?random=${i}`,
 }));
 
 const ResponsiveGallery = () => {

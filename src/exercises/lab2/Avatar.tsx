@@ -12,6 +12,7 @@ export default function Avatar({ source, size = 50 }: AvatarProps) {
             <Image
                 source={source}
                 style={{ width: size, height: size, borderRadius: size / 2 }}
+                resizeMode="cover"
             />
         </View>
     );
@@ -24,5 +25,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
+        overflow: 'hidden',
+        marginRight: 12,
     },
 });

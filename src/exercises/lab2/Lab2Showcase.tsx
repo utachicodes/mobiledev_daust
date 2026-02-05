@@ -4,6 +4,7 @@ import Lab1Profile from '../lab1/UserProfile';
 import StatCard from './StatCard';
 import Avatar from './Avatar';
 import RecipeCard from './RecipeCard';
+import ResponsiveGallery from './ResponsiveGallery';
 
 const RECIPES = [
     {
@@ -48,6 +49,11 @@ export default function Lab2Showcase() {
                 <Avatar source={{ uri: 'https://i.pravatar.cc/150?img=1' }} size={60} />
                 <Avatar source={{ uri: 'https://i.pravatar.cc/150?img=2' }} size={80} />
                 <Avatar source={{ uri: 'https://i.pravatar.cc/150?img=3' }} size={40} />
+            </View>
+
+            <Text style={styles.sectionTitle}>Lab 2.2: Responsive Gallery</Text>
+            <View style={styles.section}>
+                <ResponsiveGallery />
             </View>
 
             <Text style={styles.sectionTitle}>Lab 2.3: Stats</Text>
