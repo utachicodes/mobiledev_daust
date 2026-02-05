@@ -4,9 +4,10 @@ import { StyleSheet, View, SafeAreaView, TouchableOpacity, Text, Platform } from
 import UserProfile from './src/exercises/lab1/UserProfile';
 import Lab2Showcase from './src/exercises/lab2/Lab2Showcase';
 import Lab3Screen from './src/exercises/lab3';
+import Lab4Showcase from './src/exercises/lab4';
 
 export default function App() {
-  const [currentLab, setCurrentLab] = useState<'lab1' | 'lab2' | 'lab3'>('lab3');
+  const [currentLab, setCurrentLab] = useState<'lab1' | 'lab2' | 'lab3' | 'lab4'>('lab4');
 
   return (
     <SafeAreaView style={styles.container}>
@@ -33,12 +34,19 @@ export default function App() {
         >
           <Text style={[styles.btnText, currentLab === 'lab3' && styles.activeBtnText]}>Lab 3</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.btn, currentLab === 'lab4' && styles.activeBtn]}
+          onPress={() => setCurrentLab('lab4')}
+        >
+          <Text style={[styles.btnText, currentLab === 'lab4' && styles.activeBtnText]}>Lab 4</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.content}>
         {currentLab === 'lab1' && <UserProfile />}
         {currentLab === 'lab2' && <Lab2Showcase />}
         {currentLab === 'lab3' && <Lab3Screen />}
+        {currentLab === 'lab4' && <Lab4Showcase />}
       </View>
       <StatusBar style="auto" />
     </SafeAreaView>

@@ -12,7 +12,7 @@ const WeatherCard = () => {
             <View style={styles.mainInfo}>
                 <Text style={styles.temp}>72°</Text>
                 <View style={styles.conditionContainer}>
-                    {/* Using a placeholder image for the weather icon */}
+                    {/* Using a placeholder image for the weather icon cause ion got one */}
                     <Image
                         source={{ uri: 'https://cdn-icons-png.flaticon.com/512/869/869869.png' }}
                         style={styles.icon}
@@ -38,8 +38,7 @@ const WeatherCard = () => {
 
 const styles = StyleSheet.create({
     card: {
-        backgroundColor: '#4facfe', // Fallback or solid color
-        // In a real app with expo-linear-gradient, we'd use that for a nice gradient
+        backgroundColor: '#4facfe', 
         borderRadius: 24,
         padding: 24,
         width: '100%',
@@ -75,9 +74,9 @@ const styles = StyleSheet.create({
     },
     temp: {
         fontSize: 84,
-        fontWeight: '200', // Thin font for standard modern weather apps
+        fontWeight: '200', 
         color: '#fff',
-        includeFontPadding: false, // Android fix for vertical alignment
+        includeFontPadding: false, 
     },
     conditionContainer: {
         flexDirection: 'row',
