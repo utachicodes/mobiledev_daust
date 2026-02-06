@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "expo start",
+    "start:labtest1": "EXPO_USE_FAST_REFRESH=false expo start --config app.labtest1.json",
     "start:offline": "expo start --offline",
     "start:lan": "expo start --lan",
     "android": "expo start --android",
