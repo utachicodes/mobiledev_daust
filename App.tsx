@@ -7,9 +7,10 @@ import Lab2Showcase from './src/exercises/lab2/Lab2Showcase';
 import Lab3Screen from './src/exercises/lab3';
 import Lab4Showcase from './src/exercises/lab4';
 import Lab5Screen from './src/exercises/lab5';
+import LabTest1 from './src/labtest1';
 
 export default function App() {
-  const [currentLab, setCurrentLab] = useState<'lab1' | 'lab2' | 'lab3' | 'lab4' | 'lab5'>('lab5');
+  const [currentLab, setCurrentLab] = useState<'lab1' | 'lab2' | 'lab3' | 'lab4' | 'lab5' | 'labtest1'>('lab5');
 
   return (
     <NavigationContainer>
@@ -49,6 +50,12 @@ export default function App() {
           >
             <Text style={[styles.btnText, currentLab === 'lab5' && styles.activeBtnText]}>Lab 5</Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.btn, currentLab === 'labtest1' && styles.activeBtn]}
+            onPress={() => setCurrentLab('labtest1')}
+          >
+            <Text style={[styles.btnText, currentLab === 'labtest1' && styles.activeBtnText]}>Test 1</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.content}>
@@ -57,6 +64,7 @@ export default function App() {
           {currentLab === 'lab3' && <Lab3Screen />}
           {currentLab === 'lab4' && <Lab4Showcase />}
           {currentLab === 'lab5' && <Lab5Screen />}
+          {currentLab === 'labtest1' && <LabTest1 />}
         </View>
         <StatusBar style="auto" />
       </SafeAreaView>
