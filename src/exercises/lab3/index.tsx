@@ -5,7 +5,7 @@ import ResponsiveGallery from './ResponsiveGallery';
 import ThemeSwitcher from './ThemeSwitcher';
 import { ThemeProvider, useTheme } from './ThemeContext';
 
-const Lab3Content = () => {
+export const Lab3Content = () => {
     const { colors } = useTheme();
 
     return (
@@ -34,7 +34,10 @@ const Lab3Content = () => {
     );
 };
 
-export default function Lab3Screen() {
+export default function Lab3Screen({ hideProvider = false }: { hideProvider?: boolean }) {
+    if (hideProvider) {
+        return <Lab3Content />;
+    }
     return (
         <ThemeProvider>
             <SafeAreaView style={{ flex: 1 }}>

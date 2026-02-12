@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { useTheme } from '../../../../lab3/ThemeContext';
-import ResponsiveGalleryClickable from '../../components/ResponsiveGalleryClickable';
+import { useTheme } from '../../../../exercises/lab3/ThemeContext';
+import ResponsiveGalleryClickable from '../../../components/ResponsiveGalleryClickable';
 
 export default function GalleryScreen() {
     const { colors } = useTheme();

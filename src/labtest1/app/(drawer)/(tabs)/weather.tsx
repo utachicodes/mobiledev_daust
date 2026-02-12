@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native';
-import { useTheme } from '../../../../lab3/ThemeContext';
-import WeatherCard from '../../../../lab3/WeatherCard';
+import { useTheme } from '../../../../exercises/lab3/ThemeContext';
+import WeatherCard from '../../../../exercises/lab3/WeatherCard';
 
 export default function WeatherScreen() {
     const { colors } = useTheme();

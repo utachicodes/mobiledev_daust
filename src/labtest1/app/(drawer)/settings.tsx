@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { useTheme } from '../../../lab3/ThemeContext';
-import ThemeSwitcher from '../../../lab3/ThemeSwitcher';
+import { useTheme } from '../../../exercises/lab3/ThemeContext';
+import ThemeSwitcher from '../../../exercises/lab3/ThemeSwitcher';
 
 export default function SettingsScreen() {
     const { colors } = useTheme();
