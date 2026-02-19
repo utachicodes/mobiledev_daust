@@ -1,65 +1,124 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Facebook, Twitter, Instagram } from "lucide-react";
+import { Instagram, Twitter, Facebook } from "lucide-react";
 import logo from "../assets/logo.png";
+
+const SHOP_LINKS = [
+  { label: "All Products", to: "/shop" },
+  { label: "New Arrivals", to: "/shop" },
+  { label: "Best Sellers", to: "/shop" },
+  { label: "Sale", href: "#" },
+];
+
+const COMPANY_LINKS = [
+  { label: "About Us", to: "/about" },
+  { label: "Sustainability", href: "#" },
+  { label: "Careers", href: "#" },
+  { label: "Press", href: "#" },
+];
+
+const SUPPORT_LINKS = [
+  { label: "Contact Us", to: "/contact" },
+  { label: "FAQs", href: "#" },
+  { label: "Shipping & Returns", href: "#" },
+  { label: "Size Guide", href: "#" },
+];
+
+const SOCIALS = [
+  { Icon: Instagram, label: "Instagram" },
+  { Icon: Twitter, label: "Twitter" },
+  { Icon: Facebook, label: "Facebook" },
+];
+
+function FooterLink({ label, to, href }) {
+  const cls = "text-white/45 hover:text-white text-sm font-[500] transition-colors duration-300";
+  return (
+    <li>
+      {to ? (
+        <Link to={to} className={cls}>{label}</Link>
+      ) : (
+        <a href={href} className={cls}>{label}</a>
+      )}
+    </li>
+  );
+}
+
+function FooterColumn({ title, links }) {
+  return (
+    <div>
+      <h4 className="text-[10px] font-[900] text-white/25 uppercase tracking-[0.22em] mb-5">
+        {title}
+      </h4>
+      <ul className="space-y-3">
+        {links.map(l => <FooterLink key={l.label} {...l} />)}
+      </ul>
+    </div>
+  );
+}
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-navy text-white">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <div className="flex items-center gap-3 mb-4">
-              <img src={logo} alt="Life at DAUST" className="h-9 w-9" />
-              <h3 className="text-lg font-bold">LIFE AT DAUST</h3>
+    <footer className="bg-brand-navy text-white relative overflow-hidden">
+      {/* Top orange accent line */}
+      <div className="h-px bg-gradient-to-r from-transparent via-brand-orange/50 to-transparent" />
+
+      {/* Subtle glow */}
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-brand-orange/5 rounded-full blur-[140px] pointer-events-none" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        {/* Brand header row */}
+        <div className="py-10 sm:py-14 border-b border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <img src={logo} alt="Life at DAUST" className="h-16 w-16 flex-shrink-0" />
+            <div>
+              <p className="text-white/30 text-xs font-[600] tracking-widest mt-0.5">
+                Dakar, Senegal · Est. 2023
+              </p>
             </div>
-            <p className="text-white/80 text-sm">
-              Apparel & essentials inspired by campus life and community.
-            </p>
-            <div className="mt-4 flex space-x-4">
-              <a href="#" className="text-white/70 hover:text-brand-orange"><Facebook className="h-5 w-5" /></a>
-              <a href="#" className="text-white/70 hover:text-brand-orange"><Twitter className="h-5 w-5" /></a>
-              <a href="#" className="text-white/70 hover:text-brand-orange"><Instagram className="h-5 w-5" /></a>
+          </div>
+          <p className="text-white/35 text-sm leading-relaxed max-w-xs">
+            Campus apparel and essentials made for and by the DAUST community.
+          </p>
+        </div>
+
+        {/* Links grid */}
+        <div className="py-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <FooterColumn title="Shop" links={SHOP_LINKS} />
+          <FooterColumn title="Company" links={COMPANY_LINKS} />
+          <FooterColumn title="Support" links={SUPPORT_LINKS} />
+
+          {/* Social column */}
+          <div>
+            <h4 className="text-[10px] font-[900] text-white/25 uppercase tracking-[0.22em] mb-5">
+              Follow Us
+            </h4>
+            <div className="flex gap-2.5">
+              {SOCIALS.map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={label}
+                  className="w-9 h-9 rounded-xl bg-white/5 hover:bg-brand-orange/15 hover:text-brand-orange text-white/30 flex items-center justify-center transition-all duration-300"
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
             </div>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 uppercase tracking-wider mb-4">Shop</h3>
-            <ul className="space-y-2">
-              <li><Link to="/shop" className="text-white/70 hover:text-brand-orange">All Products</Link></li>
-              <li><Link to="/collections/summer" className="text-white/70 hover:text-brand-orange">New Arrivals</Link></li>
-              <li><Link to="/collections/limited" className="text-white/70 hover:text-brand-orange">Best Sellers</Link></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Sale</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 uppercase tracking-wider mb-4">Company</h3>
-            <ul className="space-y-2">
-              <li><Link to="/about" className="text-white/70 hover:text-brand-orange">About Us</Link></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Sustainability</a></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Careers</a></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Press</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="text-sm font-semibold text-white/80 uppercase tracking-wider mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li><Link to="/contact" className="text-white/70 hover:text-brand-orange">Contact Us</Link></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">FAQs</a></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Shipping & Returns</a></li>
-              <li><a href="#" className="text-white/70 hover:text-brand-orange">Size Guide</a></li>
-            </ul>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-white/70 text-sm">&copy; 2025 Life at DAUST. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 flex space-x-6">
-            <a href="#" className="text-white/70 hover:text-brand-orange text-sm">Privacy Policy</a>
-            <a href="#" className="text-white/70 hover:text-brand-orange text-sm">Terms of Service</a>
-            <a href="#" className="text-white/70 hover:text-brand-orange text-sm">Cookie Policy</a>
+        {/* Bottom bar */}
+        <div className="py-5 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-white/20 text-xs font-[500]">
+            &copy; 2026 Life at DAUST. All rights reserved.
+          </p>
+          <div className="flex gap-5">
+            {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(l => (
+              <a key={l} href="#" className="text-white/20 hover:text-white/50 text-xs font-[500] transition-colors">
+                {l}
+              </a>
+            ))}
           </div>
         </div>
       </div>

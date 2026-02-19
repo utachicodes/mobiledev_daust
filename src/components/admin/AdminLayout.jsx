@@ -8,9 +8,10 @@ import {
     LogOut,
     ChevronLeft,
     Menu,
-    LifeBuoy,
+    ExternalLink,
     Layers
 } from "lucide-react";
+import logo from "../../assets/logo.png";
 
 export default function AdminLayout() {
     const { isAdmin, logout } = useAdmin();
@@ -32,24 +33,27 @@ export default function AdminLayout() {
         <div className="flex h-screen bg-gray-50 overflow-hidden">
             {/* Sidebar */}
             <aside
-                className={`${isSidebarOpen ? "w-64" : "w-20"
+                className={`${isSidebarOpen ? "w-60" : "w-[72px]"
                     } bg-brand-navy text-white transition-all duration-300 flex flex-col z-[110]`}
             >
-                <div className="p-6 flex items-center justify-between overflow-hidden whitespace-nowrap">
+                {/* Logo area */}
+                <div className="h-16 px-4 flex items-center justify-between border-b border-white/5">
                     {isSidebarOpen && (
-                        <Link to="/" className="flex items-center gap-2">
-                            <span className="font-extrabold text-xl tracking-tighter">DAUST Admin</span>
+                        <Link to="/" className="flex items-center gap-2.5 overflow-hidden">
+                            <img src={logo} alt="DAUST" className="h-8 w-8 flex-shrink-0" />
+                            <span className="font-[800] text-sm tracking-tight truncate">DAUST Admin</span>
                         </Link>
                     )}
                     <button
                         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                        className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                        className="p-2 hover:bg-white/5 rounded-lg transition-colors flex-shrink-0"
                     >
-                        {isSidebarOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
+                        {isSidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
                     </button>
                 </div>
 
-                <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+                {/* Navigation */}
+                <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
                     {menuItems.map((item) => {
                         const isActive = location.pathname === item.path;
                         const Icon = item.icon;
@@ -57,49 +61,54 @@ export default function AdminLayout() {
                             <Link
                                 key={item.path}
                                 to={item.path}
-                                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-                                    ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/20"
-                                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 ${isActive
+                                    ? "bg-brand-orange text-white"
+                                    : "text-white/40 hover:text-white hover:bg-white/5"
                                     }`}
                             >
-                                <Icon size={20} className="flex-shrink-0" />
-                                {isSidebarOpen && <span className="font-bold text-sm">{item.label}</span>}
+                                <Icon size={18} className="flex-shrink-0" />
+                                {isSidebarOpen && <span className="text-sm font-semibold">{item.label}</span>}
                             </Link>
                         );
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-white/5 space-y-2">
+                {/* Bottom actions */}
+                <div className="p-3 border-t border-white/5 space-y-1">
                     <Link
                         to="/shop"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all"
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/30 hover:text-white hover:bg-white/5 transition-all"
                     >
-                        <LifeBuoy size={20} />
-                        {isSidebarOpen && <span className="font-bold text-sm">View Store</span>}
+                        <ExternalLink size={18} />
+                        {isSidebarOpen && <span className="text-sm font-semibold">View Store</span>}
                     </Link>
                     <button
                         onClick={logout}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-red-400 hover:bg-red-400/10 transition-all"
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/30 hover:text-red-400 hover:bg-red-400/10 transition-all"
                     >
-                        <LogOut size={20} />
-                        {isSidebarOpen && <span className="font-bold text-sm">Logout</span>}
+                        <LogOut size={18} />
+                        {isSidebarOpen && <span className="text-sm font-semibold">Sign Out</span>}
                     </button>
                 </div>
             </aside>
 
             {/* Main Content */}
             <main className="flex-1 flex flex-col overflow-hidden">
-                <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 z-50">
-                    <h1 className="text-xl font-black text-brand-navy">
+                {/* Top Bar */}
+                <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 z-50">
+                    <h1 className="text-base font-[800] text-brand-navy tracking-tight">
                         {menuItems.find(item => item.path === location.pathname)?.label || "Admin Panel"}
                     </h1>
-                    <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-full bg-brand-orange text-white flex items-center justify-center font-bold text-xs">A</div>
-                        <span className="text-sm font-bold text-gray-700">Administrator</span>
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-bold">
+                            A
+                        </div>
+                        <span className="text-sm font-semibold text-gray-500 hidden sm:inline">Admin</span>
                     </div>
                 </header>
 
-                <div className="flex-1 overflow-y-auto p-8">
+                {/* Page Content */}
+                <div className="flex-1 overflow-y-auto p-6">
                     <Outlet />
                 </div>
             </main>

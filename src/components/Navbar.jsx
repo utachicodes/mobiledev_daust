@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, X, ShoppingBag, User, Search, ChevronDown } from "lucide-react";
+import { Menu, X, ShoppingBag, ChevronDown } from "lucide-react";
 import { useCart } from "../context/CartContext.jsx";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
@@ -10,200 +10,214 @@ import { NAV_LINKS } from "../data/navigation.js";
 export default function Navbar() {
   const { count } = useCart();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const collections = useQuery(api.collections.list);
   const location = useLocation();
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [location]);
+  useEffect(() => { setMobileOpen(false); }, [location]);
 
-  // Lock body scroll when mobile menu is open
   useEffect(() => {
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "unset";
+    return () => { document.body.style.overflow = "unset"; };
   }, [mobileOpen]);
 
-  const navClasses = ({ isActive }) =>
-    `px-4 py-2 text-sm font-bold tracking-tight transition-all duration-300 ${isActive ? "text-brand-orange" : "text-gray-900 hover:text-brand-orange"
-    }`;
-
-  // Process nav links to include dynamic collections
   const dynNavLinks = NAV_LINKS.map(link => {
     if (link.name === "Collections" && collections) {
-      return {
-        ...link,
-        dropdown: collections.map(c => ({
-          name: c.name,
-          path: `/collections/${c.slug}`
-        }))
-      };
+      return { ...link, dropdown: collections.map(c => ({ name: c.name, path: `/collections/${c.slug}` })) };
     }
     return link;
   });
 
   return (
-    <nav className="glass-morphism h-20 sticky top-0 z-[100] flex items-center">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center gap-3 interactive-scale">
-              <img src={logo} alt="Life at DAUST" className="h-10 w-auto" />
-              <span className="font-extrabold text-xl text-brand-navy tracking-tighter">Life at DAUST</span>
-            </Link>
-          </div>
+    <>
+      {/* ── Desktop / Sticky Nav ── */}
+      <nav
+        className={`h-[72px] sticky top-0 z-[100] flex items-center transition-all duration-500 ${scrolled ? "glass-morphism shadow-sm" : "bg-white/90 backdrop-blur-sm"
+          }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between h-full">
 
-          {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center space-x-2">
-            {dynNavLinks.map((link) =>
-              link.dropdown ? (
-                <div key={link.name} className="relative group dropdown">
-                  <button className="flex items-center gap-1 text-gray-900 hover:text-brand-orange transition-colors duration-300 px-4 py-2 text-sm font-bold tracking-tight uppercase tracking-widest text-[10px]">
-                    {link.name} <ChevronDown size={14} className="group-hover:rotate-180 transition-transform duration-300" />
-                  </button>
-                  <div className="dropdown-menu absolute hidden pt-2 w-56 -left-4 z-50">
-                    <div className="bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden py-2 animate-in fade-in slide-in-from-top-1 duration-200">
-                      {link.dropdown.length > 0 ? (
-                        link.dropdown.map((sub) => (
-                          <Link
-                            key={sub.name}
-                            to={sub.path}
-                            className="block px-6 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-brand-orange transition-colors"
-                          >
-                            {sub.name}
-                          </Link>
-                        ))
-                      ) : (
-                        <div className="px-6 py-3 text-sm text-gray-400">No collections</div>
-                      )}
+            {/* Logo */}
+            <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
+              <img
+                src={logo}
+                alt="Life at DAUST"
+                className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+              />
+            </Link>
+
+            {/* Desktop Nav Links */}
+            <div className="hidden lg:flex items-center gap-0.5">
+              {dynNavLinks.map((link) =>
+                link.dropdown ? (
+                  <div key={link.name} className="relative group dropdown">
+                    <button className="flex items-center gap-1.5 px-3.5 py-2.5 text-[11px] font-[700] uppercase tracking-[0.13em] text-gray-600 hover:text-brand-navy transition-colors duration-300">
+                      {link.name}
+                      <ChevronDown size={11} className="opacity-60 group-hover:rotate-180 transition-transform duration-300" />
+                    </button>
+                    <div className="dropdown-menu absolute hidden pt-2.5 w-56 left-0 z-50">
+                      <div className="bg-white rounded-2xl shadow-2xl shadow-black/8 border border-gray-100 overflow-hidden p-1.5">
+                        {link.dropdown.length > 0 ? (
+                          link.dropdown.map(sub => (
+                            <Link
+                              key={sub.name}
+                              to={sub.path}
+                              className="flex items-center px-4 py-2.5 text-sm font-[600] text-gray-600 hover:bg-orange-50/70 hover:text-brand-orange rounded-xl transition-all duration-200"
+                            >
+                              {sub.name}
+                            </Link>
+                          ))
+                        ) : (
+                          <div className="px-4 py-3 text-sm text-gray-400">No collections yet</div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <NavLink key={link.name} to={link.path} className={navClasses}>
-                  <span className="uppercase tracking-widest text-[10px]">{link.name}</span>
-                </NavLink>
-              )
-            )}
-          </div>
-
-          {/* Right side icons */}
-          <div className="hidden lg:flex items-center gap-2">
-            <button className="p-2 text-gray-900 hover:text-brand-orange transition-colors interactive-scale" aria-label="Search">
-              <Search size={20} strokeWidth={2.5} />
-            </button>
-            <button className="p-2 text-gray-900 hover:text-brand-orange transition-colors interactive-scale" aria-label="Account">
-              <User size={20} strokeWidth={2.5} />
-            </button>
-            <Link
-              to="/cart"
-              className="relative p-2 text-gray-900 hover:text-brand-orange transition-colors interactive-scale"
-              aria-label="Cart"
-            >
-              <ShoppingBag size={20} strokeWidth={2.5} />
-              {count > 0 && (
-                <span className="absolute top-1 right-1 bg-brand-orange text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center shadow-sm">
-                  {count}
-                </span>
+                ) : (
+                  <NavLink
+                    key={link.name}
+                    to={link.path}
+                    className={({ isActive }) =>
+                      `relative px-3.5 py-2.5 text-[11px] font-[700] uppercase tracking-[0.13em] transition-colors duration-300 nav-link-ul${isActive ? " text-brand-orange active-link" : " text-gray-600 hover:text-brand-navy"}`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                )
               )}
-            </Link>
-          </div>
+            </div>
 
-          {/* Mobile right items */}
-          <div className="lg:hidden flex items-center gap-4">
-            <Link to="/cart" className="relative text-gray-900 interactive-scale" aria-label="Cart">
-              <ShoppingBag size={22} strokeWidth={2.5} />
-              {count > 0 && (
-                <span className="absolute -top-1 -right-1 bg-brand-orange text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                  {count}
+            {/* Right Side */}
+            <div className="flex items-center gap-1">
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="relative flex items-center gap-2 px-3 py-2.5 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-all duration-300"
+                aria-label="Cart"
+              >
+                <ShoppingBag size={19} strokeWidth={2} />
+                {count > 0 && (
+                  <span className="absolute top-1.5 right-1.5 bg-brand-orange text-white text-[9px] font-[900] rounded-full min-w-[16px] h-4 flex items-center justify-center px-1 shadow-sm animate-scale-in">
+                    {count}
+                  </span>
+                )}
+                <span className="hidden lg:block text-[11px] font-[700] uppercase tracking-[0.1em]">
+                  {count > 0 ? `Cart (${count})` : "Cart"}
                 </span>
-              )}
+              </Link>
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden p-2.5 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-colors"
+                aria-label="Open menu"
+              >
+                <Menu size={21} strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      {/* ── Full-Screen Mobile Menu ── */}
+      <div
+        className={`fixed inset-0 z-[200] flex flex-col transition-all duration-500 ${mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
+      >
+        {/* Dark navy background */}
+        <div className="absolute inset-0 bg-brand-navy" />
+        <div className="absolute inset-0 dot-pattern pointer-events-none" />
+
+        {/* Orange glow decorations */}
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-brand-orange/15 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute top-20 right-0 w-60 h-60 bg-brand-orange/8 rounded-full blur-[100px] pointer-events-none" />
+
+        {/* Content */}
+        <div
+          className={`relative z-10 flex flex-col h-full transition-all duration-500 ${mobileOpen ? "translate-y-0" : "translate-y-5"
+            }`}
+        >
+          {/* Top bar */}
+          <div className="flex justify-between items-center px-6 h-[72px] border-b border-white/5">
+            <Link to="/" className="flex items-center gap-2.5">
+              <img src={logo} alt="Life at DAUST" className="h-10 w-auto" />
             </Link>
             <button
-              onClick={() => setMobileOpen(true)}
-              className="text-gray-900 p-1"
-              aria-label="Open menu"
+              onClick={() => setMobileOpen(false)}
+              className="p-2 text-white/50 hover:text-white rounded-xl transition-colors"
+              aria-label="Close menu"
             >
-              <Menu size={28} strokeWidth={2.5} />
+              <X size={22} strokeWidth={2} />
             </button>
           </div>
-        </div>
-      </div>
 
-      {/* Mobile Menu Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/40 backdrop-blur-sm z-[150] transition-opacity duration-500 ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-          }`}
-        onClick={() => setMobileOpen(false)}
-      />
-
-      {/* Mobile Menu Side Drawer */}
-      <div
-        className={`fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white z-[200] shadow-2xl transition-transform duration-500 linear-out ${mobileOpen ? 'translate-x-0' : 'translate-x-full'
-          } flex flex-col`}
-      >
-        <div className="p-6 flex justify-between items-center border-b border-gray-100">
-          <span className="font-extrabold text-lg text-brand-navy uppercase tracking-tighter">Menu</span>
-          <button onClick={() => setMobileOpen(false)} className="p-2 text-gray-900 interactive-scale">
-            <X size={24} strokeWidth={2.5} />
-          </button>
-        </div>
-
-        <div className="flex-1 overflow-y-auto py-8 px-6 space-y-6">
-          {dynNavLinks.map((link) => (
-            <div key={link.name} className="space-y-4">
-              {link.dropdown ? (
-                <>
-                  <div className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">
-                    {link.name}
-                  </div>
-                  <div className="space-y-4 pl-4 border-l-2 border-gray-50">
-                    {link.dropdown.length > 0 ? (
-                      link.dropdown.map((sub) => (
+          {/* Nav items */}
+          <nav className="flex-1 overflow-y-auto px-6 py-8 space-y-1">
+            {dynNavLinks.map((link, i) => (
+              <div key={link.name}>
+                {link.dropdown ? (
+                  <div className="mb-5">
+                    <div className="px-3 py-2 text-[10px] font-[900] text-white/25 uppercase tracking-[0.25em] mb-1.5">
+                      {link.name}
+                    </div>
+                    <div className="space-y-0.5 pl-3 border-l-2 border-white/10">
+                      {link.dropdown.map(sub => (
                         <NavLink
                           key={sub.name}
                           to={sub.path}
-                          className="block text-xl font-bold text-gray-900 hover:text-brand-orange transition-colors"
+                          className={({ isActive }) =>
+                            `flex items-center px-3 py-2.5 text-base font-[700] rounded-xl transition-all duration-200 ${isActive ? "text-brand-orange" : "text-white/60 hover:text-white hover:bg-white/5"
+                            }`
+                          }
                         >
                           {sub.name}
                         </NavLink>
-                      ))
-                    ) : (
-                      <div className="text-sm text-gray-400">No collections available</div>
-                    )}
+                      ))}
+                    </div>
                   </div>
-                </>
-              ) : (
-                <NavLink
-                  to={link.path}
-                  className="block text-2xl font-black text-gray-900 uppercase tracking-tighter hover:text-brand-orange transition-colors"
-                >
-                  {link.name}
-                </NavLink>
-              )}
-            </div>
-          ))}
-        </div>
+                ) : (
+                  <NavLink
+                    to={link.path}
+                    style={{ animationDelay: `${i * 50}ms`, animationFillMode: "both" }}
+                    className={({ isActive }) =>
+                      `flex items-center justify-between px-3 py-4 text-[2rem] font-[900] tracking-[-0.03em] rounded-2xl transition-all duration-200 animate-fade-in-up ${isActive ? "text-brand-orange" : "text-white hover:bg-white/5 hover:pl-5"
+                      }`
+                    }
+                  >
+                    {link.name}
+                  </NavLink>
+                )}
+              </div>
+            ))}
+          </nav>
 
-        <div className="p-8 border-t border-gray-100 bg-gray-50 space-y-4">
-          <button className="w-full h-14 bg-brand-navy text-white font-bold rounded-xl flex items-center justify-center gap-3 interactive-scale">
-            <User size={20} />
-            My Account
-          </button>
-          <div className="flex gap-4">
-            <div className="flex-1 h-14 glass-morphism rounded-xl flex items-center justify-center text-gray-500 text-sm">
-              Language: EN
-            </div>
-            <div className="flex-1 h-14 glass-morphism rounded-xl flex items-center justify-center text-gray-500 text-sm">
-              Currency: USD
-            </div>
+          {/* Bottom CTA */}
+          <div className="px-6 pb-8 pt-4 border-t border-white/5">
+            <Link
+              to="/cart"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between px-5 py-4 bg-brand-orange rounded-2xl text-white font-[800] text-sm hover:bg-orange-500 active:scale-[0.98] transition-all"
+            >
+              <span className="uppercase tracking-[0.12em]">View Cart</span>
+              <div className="flex items-center gap-2">
+                <ShoppingBag size={17} />
+                {count > 0 && (
+                  <span className="bg-white text-brand-orange rounded-full w-5 h-5 flex items-center justify-center text-xs font-[900]">
+                    {count}
+                  </span>
+                )}
+              </div>
+            </Link>
           </div>
         </div>
       </div>
-    </nav>
+    </>
   );
 }

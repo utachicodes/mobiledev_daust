@@ -20,7 +20,7 @@ describe('ProductCard Component', () => {
         renderWithProviders(<ProductCard product={mockProduct} />);
 
         expect(screen.getByText('DAUST Water Bottle')).toBeInTheDocument();
-        expect(screen.getByText('$29.99')).toBeInTheDocument();
+        expect(screen.getByText('30 CFA')).toBeInTheDocument();
         expect(screen.getByText('Accessories')).toBeInTheDocument();
     });
 

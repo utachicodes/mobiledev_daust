@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation, Link, Navigate } from "react-router-dom";
 import { useAdmin } from "../../context/AdminContext";
-import { Lock, ArrowRight, Shield } from "lucide-react";
+import { Lock, ArrowRight } from "lucide-react";
 import Button from "../../components/ui/Button";
+import logo from "../../assets/logo.png";
 
 export default function AdminLogin() {
     const [password, setPassword] = useState("");
@@ -23,42 +24,49 @@ export default function AdminLogin() {
         setLoading(true);
         setError("");
 
-        // Simulate delay
         setTimeout(() => {
             if (login(password)) {
                 navigate(from, { replace: true });
             } else {
-                setError("Invalid administrative password");
+                setError("Invalid password. Please try again.");
                 setLoading(false);
             }
-        }, 800);
+        }, 600);
     };
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="w-full max-w-[440px] animate-in fade-in zoom-in duration-500">
-                <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-navy text-white mb-6">
-                        <Shield size={32} />
+            {/* Background pattern */}
+            <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-[-20%] right-[-10%] w-[500px] h-[500px] bg-brand-orange/5 rounded-full blur-[100px]" />
+                <div className="absolute bottom-[-20%] left-[-10%] w-[400px] h-[400px] bg-brand-navy/5 rounded-full blur-[100px]" />
+            </div>
+
+            <div className="relative z-10 w-full max-w-[420px] animate-fade-in-up">
+                {/* Logo & Header */}
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center justify-center mb-5">
+                        <img src={logo} alt="Life at DAUST" className="h-14 w-auto" />
                     </div>
-                    <h1 className="text-3xl font-black text-brand-navy tracking-tighter mb-2">Admin Portal</h1>
-                    <p className="text-gray-500 font-medium max-w-[280px] mx-auto">Access restricted to DAUST staff and administrators</p>
+                    <h1 className="text-2xl font-[900] text-brand-navy tracking-tight mb-2">Admin Access</h1>
+                    <p className="text-gray-400 text-sm">Restricted to DAUST staff only</p>
                 </div>
 
-                <div className="bg-white rounded-[2rem] p-8 sm:p-10 shadow-2xl shadow-gray-200/50 border border-gray-100">
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Login Card */}
+                <div className="bg-white rounded-2xl p-8 shadow-xl shadow-gray-200/50 border border-gray-100">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         <div>
-                            <label htmlFor="password" className="block text-xs font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">
-                                Security Password
+                            <label htmlFor="password" className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">
+                                Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 h-5 w-5" />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 h-4 w-4" />
                                 <input
                                     id="password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full bg-gray-50 border-none rounded-2xl pl-12 pr-4 py-4 text-brand-navy font-bold focus:ring-2 focus:ring-brand-orange/20 transition-all"
+                                    className="w-full bg-gray-50 border border-gray-100 rounded-xl pl-11 pr-4 py-3.5 text-brand-navy font-medium text-sm focus:bg-white transition-all"
                                     placeholder="Enter admin password"
                                     required
                                 />
@@ -66,7 +74,7 @@ export default function AdminLogin() {
                         </div>
 
                         {error && (
-                            <p className="text-red-500 text-sm font-bold ml-1 animate-in slide-in-from-top-1 duration-200">
+                            <p className="text-red-500 text-sm font-medium animate-fade-in">
                                 {error}
                             </p>
                         )}
@@ -75,23 +83,23 @@ export default function AdminLogin() {
                             type="submit"
                             variant="primary"
                             size="lg"
-                            className="w-full rounded-2xl h-14 group"
+                            className="w-full rounded-xl h-12 group"
                             loading={loading}
                         >
-                            Verify Identity
-                            <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                            Sign In
+                            <ArrowRight size={16} className="ml-1.5 group-hover:translate-x-0.5 transition-transform" />
                         </Button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-gray-50 text-center">
-                        <Link to="/" className="text-gray-400 hover:text-brand-orange text-xs font-bold uppercase tracking-widest transition-colors">
-                            ← Return to Store
+                    <div className="mt-6 pt-5 border-t border-gray-50 text-center">
+                        <Link to="/" className="text-gray-400 hover:text-brand-orange text-xs font-semibold transition-colors">
+                            ← Back to store
                         </Link>
                     </div>
                 </div>
 
-                <p className="text-center mt-10 text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">
-                    Life at DAUST © 2026 Admin Infrastructure
+                <p className="text-center mt-8 text-[10px] text-gray-300 font-medium tracking-wider">
+                    Life at DAUST © 2026
                 </p>
             </div>
         </div>

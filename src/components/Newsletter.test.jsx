@@ -8,8 +8,7 @@ describe('Newsletter Component', () => {
     it('renders newsletter signup form', () => {
         renderWithProviders(<Newsletter />);
 
-        expect(screen.getByText(/stay updated/i)).toBeInTheDocument();
-        expect(screen.getByText(/subscribe to our newsletter/i)).toBeInTheDocument();
+        expect(screen.getByText(/stay in the loop/i)).toBeInTheDocument();
         expect(screen.getByPlaceholderText(/enter your email/i)).toBeInTheDocument();
     });
 

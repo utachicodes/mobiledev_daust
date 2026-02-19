@@ -1,84 +1,403 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import { ArrowRight, ChevronLeft, ChevronRight, Quote, Star, Zap } from "lucide-react";
 import Hero from "../components/Hero.jsx";
 import Newsletter from "../components/Newsletter.jsx";
+import ProductCard from "../components/ProductCard.jsx";
 import Skeleton from "../components/ui/Skeleton.jsx";
+import Button from "../components/ui/Button.jsx";
+import { PRODUCTS } from "../data/products.js";
+
+/* ─── Data ─────────────────────────────────────────────────── */
+
+const featuredProduct =
+  PRODUCTS.find(p => p.category === "Hoodies" && p.rating >= 4.8) ||
+  PRODUCTS.find(p => p.category === "Hoodies") ||
+  PRODUCTS[0];
+
+const trendingProducts = [...PRODUCTS].sort((a, b) => b.rating - a.rating).slice(0, 8);
+
+const testimonials = [
+  { name: "Amadou D.", role: "CS, Class of 2026", text: "The hoodie quality is unreal — I wear mine almost every day. Everyone asks where I got it." },
+  { name: "Fatou S.", role: "EE, Class of 2025", text: "Ordered the ELEC Engineer tee and it fit perfectly. The print has held up through dozens of washes." },
+  { name: "Moussa K.", role: "Proud Parent", text: "Bought the Proud Parent hoodie for my wife and she absolutely loves it. Thoughtful design." },
+  { name: "Aïda B.", role: "Business, Class of 2027", text: "Finally campus merch I'm proud to wear off-campus too. The quality is genuinely premium." },
+  { name: "Omar T.", role: "Alumni, Class of 2024", text: "Ordered three hoodies for graduation week. They arrived on time and looked amazing in photos." },
+  { name: "Rama N.", role: "CS, Class of 2026", text: "The limited edition drop sold out fast — glad I caught it. Wearing it at every hackathon now." },
+];
+
+const STRIP_ITEMS = [
+  "New Drops",
+  "Campus Delivery",
+  "Premium Quality",
+  "Est. 2023",
+  "Daustian Pride",
+  "Limited Edition",
+  "Student Designed",
+  "Made for DAUST",
+];
+
+const BRAND_STATS = [
+  { value: "1,200+", label: "Students" },
+  { value: "15+", label: "Products" },
+  { value: "3", label: "Collections" },
+  { value: "2023", label: "Founded" },
+];
+
+/* ─── Helpers ────────────────────────────────────────────────── */
+
+/** IntersectionObserver–based reveal for a single element */
+function useReveal(threshold = 0.12) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { el.classList.add("revealed"); obs.disconnect(); } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return ref;
+}
+
+/* ─── Sub-components ─────────────────────────────────────────── */
+
+function AnnouncementStrip() {
+  const items = [...STRIP_ITEMS, ...STRIP_ITEMS]; // double for seamless loop
+  return (
+    <div className="bg-brand-orange overflow-hidden py-3.5 select-none">
+      <div className="flex animate-marquee" style={{ width: "max-content" }}>
+        {items.map((item, i) => (
+          <span key={i} className="flex items-center gap-2 mx-6 text-white text-[11px] font-[800] uppercase tracking-[0.18em] whitespace-nowrap">
+            <Zap size={11} className="fill-current opacity-80" />
+            {item}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollectionCard({ collection, index }) {
+  return (
+    <Link
+      to={`/collections/${collection.slug}`}
+      className="group relative rounded-2xl overflow-hidden bg-gray-100 block"
+    >
+      <div className="aspect-[3/4] overflow-hidden">
+        <img
+          src={
+            collection.image ||
+            `https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=640&q=80`
+          }
+          alt={collection.name}
+          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108"
+          loading="lazy"
+        />
+      </div>
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent transition-opacity duration-300" />
+      {/* Number badge */}
+      <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-2.5 py-1 text-white text-[10px] font-[900] tracking-widest">
+        0{index + 1}
+      </div>
+      {/* Text */}
+      <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+        <h3 className="text-white text-lg sm:text-xl font-[900] tracking-tight mb-1.5 group-hover:text-brand-orange transition-colors duration-300">
+          {collection.name}
+        </h3>
+        <span className="inline-flex items-center gap-1.5 text-white/55 text-[10px] font-[800] uppercase tracking-[0.15em] group-hover:text-white/80 transition-colors duration-300">
+          Shop now
+          <ArrowRight size={11} className="group-hover:translate-x-1 transition-transform duration-300" />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function CollectionSkeleton() {
+  return (
+    <div className="rounded-2xl overflow-hidden aspect-[3/4] bg-gray-100">
+      <Skeleton className="w-full h-full" />
+    </div>
+  );
+}
+
+function BrandStats() {
+  const ref = useReveal(0.2);
+  return (
+    <section className="bg-brand-cream py-16 sm:py-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div ref={ref} className="section-reveal grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+          {BRAND_STATS.map((stat, i) => (
+            <div
+              key={stat.label}
+              className={`flex flex-col items-center text-center reveal-delay-${i + 1}`}
+            >
+              <span className="text-[clamp(2.5rem,6vw,4rem)] font-[900] text-brand-navy tracking-[-0.04em] leading-none mb-2">
+                {stat.value}
+              </span>
+              <span className="text-[11px] font-[700] text-gray-400 uppercase tracking-[0.2em]">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TestimonialCard({ t }) {
+  const initials = t.name.split(" ").map(w => w[0]).join("");
+  return (
+    <div className="flex-shrink-0 w-[300px] sm:w-[340px] bg-white rounded-2xl p-6 border border-gray-100 shadow-sm mx-2.5 flex flex-col">
+      <Quote size={18} className="text-brand-orange/25 mb-3" />
+      <p className="text-gray-600 text-sm leading-relaxed flex-1">{t.text}</p>
+      <div className="flex items-center gap-3 mt-5 pt-4 border-t border-gray-50">
+        <div className="w-9 h-9 rounded-full bg-brand-navy text-white flex items-center justify-center text-xs font-[800] flex-shrink-0">
+          {initials}
+        </div>
+        <div>
+          <p className="text-sm font-[800] text-brand-navy leading-tight">{t.name}</p>
+          <p className="text-xs text-gray-400 mt-0.5">{t.role}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TestimonialMarquee() {
+  const half1 = testimonials;
+  const half2 = [...testimonials].reverse();
+  const doubled1 = [...half1, ...half1];
+  const doubled2 = [...half2, ...half2];
+
+  const ref = useReveal(0.1);
+
+  return (
+    <section className="bg-gray-50/70 py-20 sm:py-28 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <div ref={ref} className="section-reveal text-center">
+          <h2 className="text-[var(--text-4xl)] font-[900] text-brand-navy tracking-tight mb-3">
+            Community Voices
+          </h2>
+          <p className="text-gray-400 text-base max-w-md mx-auto">
+            Hear from students, parents, and alumni who wear DAUST with pride.
+          </p>
+        </div>
+      </div>
+
+      {/* Row 1 – left to right */}
+      <div className="overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8 mb-4">
+        <div className="flex animate-marquee" style={{ width: "max-content" }}>
+          {doubled1.map((t, i) => <TestimonialCard key={i} t={t} />)}
+        </div>
+      </div>
+
+      {/* Row 2 – right to left */}
+      <div className="overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8">
+        <div className="flex animate-marquee-rev" style={{ width: "max-content" }}>
+          {doubled2.map((t, i) => <TestimonialCard key={i} t={t} />)}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─── Main Component ─────────────────────────────────────────── */
 
 export default function Home() {
   const collections = useQuery(api.collections.list);
+  const scrollRef = useRef(null);
+
+  const collectionsRef = useReveal(0.08);
+  const spotlightRef = useReveal(0.1);
+  const trendingRef = useReveal(0.08);
+
+  const scroll = (dir) => {
+    if (!scrollRef.current) return;
+    scrollRef.current.scrollBy({ left: dir === "left" ? -320 : 320, behavior: "smooth" });
+  };
 
   return (
-    <main className="overflow-x-hidden">
+    <div className="w-full overflow-x-hidden">
+
+      {/* 1 ── HERO ── */}
       <Hero
         title="Life at DAUST"
-        subtitle="Explore our collections, inspired by campus life and community spirit."
-        cta="Shop Now"
-        image="http://static.photos/fashion/1200x630/42"
+        subtitle="Campus apparel and essentials — designed by students, made for the DAUST community."
+        cta="Shop Collection"
+        image="/assets/DaustianShoot/Homepage.jpg"
         to="/shop"
       />
 
-      {/* Featured collections */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 sm:mb-16 gap-4">
-          <div className="">
-            <h2 className="text-[var(--text-4xl)] font-black text-brand-navy leading-tight mb-4 tracking-tighter">
-              Featured Collections
-            </h2>
-            <p className="text-gray-500 text-lg leading">
-              Carefully curated pieces that define the modern student experience at DAUST.
-            </p>
-          </div>
-          <Link to="/shop" className="text-brand-orange font-bold uppercase tracking-widest text-sm hover:underline flex items-center gap-2 group">
-            All Products
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
-        </div>
+      {/* 2 ── ANNOUNCEMENT STRIP ── */}
+      <AnnouncementStrip />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {collections === undefined ? (
-            // Skeleton loading state
-            Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden aspect-[4/5] bg-gray-50">
-                <Skeleton className="w-full h-full" />
-              </div>
-            ))
-          ) : collections.length > 0 ? (
-            collections.slice(0, 3).map((c, idx) => (
-              <Link
-                to={`/collections/${c.slug}`}
-                key={c.slug}
-                className="group relative rounded-2xl overflow-hidden premium-shadow bg-white"
-                data-aos="fade-up"
-                data-aos-delay={idx * 100}
-              >
-                <div className="aspect-[4/5] overflow-hidden">
-                  <img
-                    src={c.image || "http://static.photos/fashion/640x360/placeholder"}
-                    alt={c.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                  />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-8">
-                  <h3 className="text-white text-2xl font-black tracking-tight mb-1 group-hover:text-brand-orange transition-colors">
-                    {c.name}
-                  </h3>
-                  <p className="text-white/70 text-sm font-medium uppercase tracking-widest">
-                    Explore styles
-                  </p>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <div className="col-span-full py-12 text-center text-gray-400">
-              Check back soon for our new collections.
+      {/* 3 ── FEATURED COLLECTIONS ── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+        <div ref={collectionsRef} className="section-reveal">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-10 sm:mb-14 gap-4">
+            <div>
+              <h2 className="text-[var(--text-4xl)] font-[900] text-brand-navy tracking-tight mb-3">
+                Featured Collections
+              </h2>
+              <p className="text-gray-400 text-base max-w-md">
+                Curated categories that define the DAUST experience.
+              </p>
             </div>
-          )}
+            <Link
+              to="/shop"
+              className="text-brand-orange font-[800] uppercase tracking-[0.12em] text-[11px] hover:underline flex items-center gap-2 group shrink-0"
+            >
+              View All <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+            {collections === undefined ? (
+              Array.from({ length: 4 }).map((_, i) => <CollectionSkeleton key={i} />)
+            ) : collections.length > 0 ? (
+              collections.slice(0, 4).map((c, i) => (
+                <CollectionCard key={c.slug || i} collection={c} index={i} />
+              ))
+            ) : (
+              ["Hoodies", "T-Shirts", "Caps", "Drinkware"].map((cat, i) => {
+                const p = PRODUCTS.find(p => p.category === cat);
+                return p ? (
+                  <CollectionCard
+                    key={cat}
+                    collection={{ slug: `/shop?category=${cat}`, name: cat, image: p.image }}
+                    index={i}
+                  />
+                ) : null;
+              })
+            )}
+          </div>
         </div>
       </section>
 
+      {/* 4 ── BRAND STATS ── */}
+      <BrandStats />
+
+      {/* 5 ── PRODUCT SPOTLIGHT ── */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+          <div ref={spotlightRef} className="section-reveal grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+
+            {/* Image */}
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-2xl overflow-hidden bg-gray-50 shadow-2xl shadow-brand-navy/10">
+                <img
+                  src={featuredProduct.image}
+                  alt={featuredProduct.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                />
+              </div>
+              {/* Accent blobs */}
+              <div className="absolute -bottom-8 -right-8 w-40 h-40 bg-brand-orange/12 rounded-full blur-[70px]" />
+              <div className="absolute -top-8 -left-8 w-32 h-32 bg-brand-navy/8 rounded-full blur-[60px]" />
+            </div>
+
+            {/* Copy */}
+            <div>
+              <span className="inline-block text-brand-orange text-[11px] font-[900] uppercase tracking-[0.22em] mb-4 px-3 py-1.5 bg-brand-orange/8 rounded-full">
+                Featured Product
+              </span>
+              <h2 className="text-[var(--text-4xl)] font-[900] text-brand-navy tracking-tight mb-4 leading-[1.05]">
+                {featuredProduct.name}
+              </h2>
+              <p className="text-gray-500 text-base leading-relaxed mb-6 max-w-md">
+                {featuredProduct.description}
+              </p>
+
+              {/* Stars */}
+              <div className="flex items-center gap-3 mb-8">
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      size={15}
+                      className={
+                        i < Math.floor(featuredProduct.rating)
+                          ? "text-yellow-400 fill-current"
+                          : "text-gray-200"
+                      }
+                    />
+                  ))}
+                </div>
+                <span className="text-sm font-[700] text-gray-400">{featuredProduct.rating} / 5</span>
+              </div>
+
+              <Link to={`/product/${featuredProduct.id}`}>
+                <Button variant="primary" size="lg" className="rounded-full group gap-2.5 pr-5">
+                  Shop Now
+                  <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 6 ── TRENDING NOW ── */}
+      <section className="bg-brand-cream py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div ref={trendingRef} className="section-reveal">
+            <div className="flex items-end justify-between mb-10 sm:mb-14">
+              <div>
+                <h2 className="text-[var(--text-4xl)] font-[900] text-brand-navy tracking-tight mb-3">
+                  Trending Now
+                </h2>
+                <p className="text-gray-400 text-base max-w-md">
+                  The pieces everyone on campus is wearing right now.
+                </p>
+              </div>
+              <div className="hidden sm:flex items-center gap-2">
+                <button
+                  onClick={() => scroll("left")}
+                  className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 hover:border-gray-300 transition-all"
+                  aria-label="Scroll left"
+                >
+                  <ChevronLeft size={17} />
+                </button>
+                <button
+                  onClick={() => scroll("right")}
+                  className="w-10 h-10 rounded-full border border-gray-200 bg-white flex items-center justify-center hover:bg-gray-50 hover:border-gray-300 transition-all"
+                  aria-label="Scroll right"
+                >
+                  <ChevronRight size={17} />
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 snap-x snap-mandatory -mx-4 px-4 sm:mx-0 sm:px-0"
+            >
+              {trendingProducts.map(product => (
+                <div
+                  key={product.id}
+                  className="min-w-[260px] sm:min-w-[280px] max-w-[280px] snap-start flex-shrink-0"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7 ── TESTIMONIALS MARQUEE ── */}
+      <TestimonialMarquee />
+
+      {/* 8 ── NEWSLETTER ── */}
       <Newsletter />
-    </main>
+    </div>
   );
 }

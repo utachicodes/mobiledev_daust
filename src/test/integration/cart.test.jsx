@@ -32,7 +32,7 @@ describe('Cart & Checkout Integration', () => {
         await user.click(shopLinks[0]);
 
         // Verify we are on the Shop page
-        expect(screen.getByText(/showing all products/i)).toBeInTheDocument();
+        expect(screen.getByText(/store catalog/i)).toBeInTheDocument();
 
         // Find a product and click Quick Add
         const quickAddButtons = screen.getAllByText(/quick add/i);
@@ -44,7 +44,7 @@ describe('Cart & Checkout Integration', () => {
 
         // Verify the product is in the cart
         expect(screen.getByText(/shopping bag/i)).toBeInTheDocument();
-        expect(screen.getByText(PRODUCTS[0].name)).toBeInTheDocument();
+        expect(screen.getAllByText(PRODUCTS[0].name).length).toBeGreaterThan(0);
     });
 
     it('can remove an item from the cart', async () => {
