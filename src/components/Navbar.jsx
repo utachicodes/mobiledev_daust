@@ -38,31 +38,80 @@ export default function Navbar() {
     <>
       {/* ── Desktop / Sticky Nav ── */}
       <nav
-        className={`h-[72px] sticky top-0 z-[100] flex items-center transition-all duration-500 ${scrolled ? "glass-morphism shadow-sm" : "bg-white/90 backdrop-blur-sm"
+        className={`sticky top-0 z-[100] transition-all duration-500 ${scrolled ? "glass-morphism shadow-sm" : "bg-white/95 backdrop-blur-md"
           }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-          <div className="flex items-center justify-between h-full">
+          {/* Row 1: Logo & Utilities */}
+          <div className="flex items-center justify-between py-4 lg:py-6 relative">
+            {/* Left Spacer (for centering) */}
+            <div className="hidden lg:flex flex-1 items-center gap-4">
+              {/* Optional secondary utility or blank */}
+            </div>
 
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group flex-shrink-0">
+            {/* Logo - Centered */}
+            <Link
+              to="/"
+              className="lg:absolute lg:left-1/2 lg:-translate-x-1/2 flex items-center group flex-shrink-0"
+            >
               <img
                 src={logo}
                 alt="Life at DAUST"
-                className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
+                className="h-10 sm:h-12 lg:h-[100px] w-auto transition-transform duration-500 group-hover:scale-105"
               />
             </Link>
 
-            {/* Desktop Nav Links */}
-            <div className="hidden lg:flex items-center gap-0.5">
+            {/* Utilities - Right */}
+            <div className="flex flex-1 items-center justify-end gap-2 sm:gap-4">
+              {/* Search Bar (Desktop) */}
+              <div className="hidden lg:flex items-center bg-gray-50 border border-gray-100 rounded-full px-4 py-2 w-64 focus-within:ring-2 focus-within:ring-brand-orange/20 focus-within:border-brand-orange transition-all duration-300">
+                <Menu size={16} className="text-gray-400 mr-2" /> {/* Simplified search icon for now, usually search icon but using Menu for reference if needed or Search from lucide */}
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  className="bg-transparent border-none text-xs font-[500] w-full focus:ring-0 p-0 placeholder:text-gray-400"
+                />
+              </div>
+
+              {/* Cart */}
+              <Link
+                to="/cart"
+                className="relative flex items-center gap-2.5 px-3 py-2.5 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-all duration-300 group"
+                aria-label="Cart"
+              >
+                <ShoppingBag size={20} strokeWidth={2} className="group-hover:scale-110 transition-transform" />
+                {count > 0 && (
+                  <span className="absolute top-1 right-1 bg-brand-orange text-white text-[9px] font-[900] rounded-full min-w-[17px] h-[17px] flex items-center justify-center px-1 shadow-md animate-scale-in">
+                    {count}
+                  </span>
+                )}
+                <span className="hidden lg:block text-[11px] font-[800] uppercase tracking-[0.1em]">
+                  Cart
+                </span>
+              </Link>
+
+              {/* Mobile hamburger */}
+              <button
+                onClick={() => setMobileOpen(true)}
+                className="lg:hidden p-2 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-colors"
+                aria-label="Open menu"
+              >
+                <Menu size={22} strokeWidth={2} />
+              </button>
+            </div>
+          </div>
+
+          {/* Row 2: Navigation Links (Desktop Only) */}
+          <div className="hidden lg:flex items-center justify-center py-3 border-t border-gray-100">
+            <div className="flex items-center gap-1">
               {dynNavLinks.map((link) =>
                 link.dropdown ? (
                   <div key={link.name} className="relative group dropdown">
-                    <button className="flex items-center gap-1.5 px-3.5 py-2.5 text-[11px] font-[700] uppercase tracking-[0.13em] text-gray-600 hover:text-brand-navy transition-colors duration-300">
+                    <button className="flex items-center gap-1.5 px-4 py-2 text-[11px] font-[700] uppercase tracking-[0.15em] text-gray-600 hover:text-brand-orange transition-colors duration-300">
                       {link.name}
-                      <ChevronDown size={11} className="opacity-60 group-hover:rotate-180 transition-transform duration-300" />
+                      <ChevronDown size={11} className="opacity-40 group-hover:rotate-180 transition-transform duration-300 group-hover:text-brand-orange" />
                     </button>
-                    <div className="dropdown-menu absolute hidden pt-2.5 w-56 left-0 z-50">
+                    <div className="dropdown-menu absolute hidden pt-2.5 w-56 left-1/2 -translate-x-1/2 z-50">
                       <div className="bg-white rounded-2xl shadow-2xl shadow-black/8 border border-gray-100 overflow-hidden p-1.5">
                         {link.dropdown.length > 0 ? (
                           link.dropdown.map(sub => (
@@ -85,42 +134,13 @@ export default function Navbar() {
                     key={link.name}
                     to={link.path}
                     className={({ isActive }) =>
-                      `relative px-3.5 py-2.5 text-[11px] font-[700] uppercase tracking-[0.13em] transition-colors duration-300 nav-link-ul${isActive ? " text-brand-orange active-link" : " text-gray-600 hover:text-brand-navy"}`
+                      `relative px-4 py-2 text-[11px] font-[700] uppercase tracking-[0.15em] transition-colors duration-300 nav-link-ul${isActive ? " text-brand-orange active-link" : " text-gray-600 hover:text-brand-orange"}`
                     }
                   >
                     {link.name}
                   </NavLink>
                 )
               )}
-            </div>
-
-            {/* Right Side */}
-            <div className="flex items-center gap-1">
-              {/* Cart */}
-              <Link
-                to="/cart"
-                className="relative flex items-center gap-2 px-3 py-2.5 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-all duration-300"
-                aria-label="Cart"
-              >
-                <ShoppingBag size={19} strokeWidth={2} />
-                {count > 0 && (
-                  <span className="absolute top-1.5 right-1.5 bg-brand-orange text-white text-[9px] font-[900] rounded-full min-w-[16px] h-4 flex items-center justify-center px-1 shadow-sm animate-scale-in">
-                    {count}
-                  </span>
-                )}
-                <span className="hidden lg:block text-[11px] font-[700] uppercase tracking-[0.1em]">
-                  {count > 0 ? `Cart (${count})` : "Cart"}
-                </span>
-              </Link>
-
-              {/* Mobile hamburger */}
-              <button
-                onClick={() => setMobileOpen(true)}
-                className="lg:hidden p-2.5 text-gray-600 hover:text-brand-navy rounded-xl hover:bg-gray-50 transition-colors"
-                aria-label="Open menu"
-              >
-                <Menu size={21} strokeWidth={2} />
-              </button>
             </div>
           </div>
         </div>

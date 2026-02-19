@@ -7,27 +7,21 @@ const SHOP_LINKS = [
   { label: "All Products", to: "/shop" },
   { label: "New Arrivals", to: "/shop" },
   { label: "Best Sellers", to: "/shop" },
-  { label: "Sale", href: "#" },
 ];
 
 const COMPANY_LINKS = [
   { label: "About Us", to: "/about" },
-  { label: "Sustainability", href: "#" },
-  { label: "Careers", href: "#" },
-  { label: "Press", href: "#" },
 ];
 
 const SUPPORT_LINKS = [
   { label: "Contact Us", to: "/contact" },
-  { label: "FAQs", href: "#" },
   { label: "Shipping & Returns", href: "#" },
   { label: "Size Guide", href: "#" },
 ];
 
 const SOCIALS = [
-  { Icon: Instagram, label: "Instagram" },
-  { Icon: Twitter, label: "Twitter" },
-  { Icon: Facebook, label: "Facebook" },
+  { Icon: Instagram, label: "Instagram", href: "https://www.instagram.com/life_at_daust/" },
+  { label: "TikTok", href: "https://www.tiktok.com/@life_at_daust" }, // Custom icon handle
 ];
 
 function FooterLink({ label, to, href }) {
@@ -70,10 +64,10 @@ export default function Footer() {
         {/* Brand header row */}
         <div className="py-10 sm:py-14 border-b border-white/5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="flex items-center gap-4">
-            <img src={logo} alt="Life at DAUST" className="h-16 w-16 flex-shrink-0" />
+            <img src={logo} alt="Life at DAUST" className="h-[80px] w-auto object-contain flex-shrink-0" />
             <div>
-              <p className="text-white/30 text-xs font-[600] tracking-widest mt-0.5">
-                Dakar, Senegal · Est. 2023
+              <p className="text-white/30 text-xs font-[600] tracking-widest mt-0.5 uppercase">
+                Est. 2023 · Dakar
               </p>
             </div>
           </div>
@@ -85,7 +79,7 @@ export default function Footer() {
         {/* Links grid */}
         <div className="py-10 grid grid-cols-2 sm:grid-cols-4 gap-8">
           <FooterColumn title="Shop" links={SHOP_LINKS} />
-          <FooterColumn title="Company" links={COMPANY_LINKS} />
+          <FooterColumn title="Information" links={COMPANY_LINKS} />
           <FooterColumn title="Support" links={SUPPORT_LINKS} />
 
           {/* Social column */}
@@ -94,14 +88,16 @@ export default function Footer() {
               Follow Us
             </h4>
             <div className="flex gap-2.5">
-              {SOCIALS.map(({ Icon, label }) => (
+              {SOCIALS.map(({ Icon, label, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-xl bg-white/5 hover:bg-brand-orange/15 hover:text-brand-orange text-white/30 flex items-center justify-center transition-all duration-300"
+                  className="w-10 h-10 rounded-xl bg-white/5 hover:bg-brand-orange/15 hover:text-brand-orange text-white/40 flex items-center justify-center transition-all duration-300 group"
                 >
-                  <Icon size={16} />
+                  {Icon ? <Icon size={18} className="group-hover:scale-110 transition-transform" /> : <span className="text-[9px] font-[900] tracking-tighter">TT</span>}
                 </a>
               ))}
             </div>

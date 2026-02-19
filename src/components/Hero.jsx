@@ -56,13 +56,12 @@ export default function Hero({
         >
           {/* Badge Removed per user request */}
 
-          {/* Title */}
+          {/* Title with font-switching animation */}
           {title && (
             <h1
-              className="font-[900] tracking-[-0.04em] text-white leading-[0.95] animate-fade-in-up delay-100"
+              className="font-[900] tracking-[-0.04em] text-white leading-[0.95] animate-font-swap"
               style={{
                 fontSize: "clamp(3.2rem, 9vw, 6rem)",
-                animationFillMode: "both",
               }}
             >
               {title}

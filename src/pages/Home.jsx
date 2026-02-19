@@ -39,12 +39,6 @@ const STRIP_ITEMS = [
   "Made for DAUST",
 ];
 
-const BRAND_STATS = [
-  { value: "1,200+", label: "Students" },
-  { value: "15+", label: "Products" },
-  { value: "3", label: "Collections" },
-  { value: "2023", label: "Founded" },
-];
 
 /* ─── Helpers ────────────────────────────────────────────────── */
 
@@ -127,30 +121,6 @@ function CollectionSkeleton() {
   );
 }
 
-function BrandStats() {
-  const ref = useReveal(0.2);
-  return (
-    <section className="bg-brand-cream py-16 sm:py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div ref={ref} className="section-reveal grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          {BRAND_STATS.map((stat, i) => (
-            <div
-              key={stat.label}
-              className={`flex flex-col items-center text-center reveal-delay-${i + 1}`}
-            >
-              <span className="text-[clamp(2.5rem,6vw,4rem)] font-[900] text-brand-navy tracking-[-0.04em] leading-none mb-2">
-                {stat.value}
-              </span>
-              <span className="text-[11px] font-[700] text-gray-400 uppercase tracking-[0.2em]">
-                {stat.label}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
 
 function TestimonialCard({ t }) {
   const initials = t.name.split(" ").map(w => w[0]).join("");
@@ -230,7 +200,7 @@ export default function Home() {
       {/* 1 ── HERO ── */}
       <Hero
         title="Welcome to the Life At Daust Store"
-        subtitle="Campus apparel and essentials — designed by students, made for the DAUST community."
+        subtitle="Campus apparel and essentials designed by students, made for the DAUST community."
         cta="Shop Collection"
         image="/assets/DaustianShoot/Homepage.jpg"
         to="/shop"
@@ -282,8 +252,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4 ── BRAND STATS ── */}
-      <BrandStats />
+      {/* 4 ── Removed Brand Stats Section ── */}
 
       {/* 5 ── PRODUCT SPOTLIGHT ── */}
       <section className="bg-white">
