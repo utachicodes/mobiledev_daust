@@ -19,9 +19,10 @@ export default function Hero({
       {/* ── Background: dot pattern ── */}
       <div className="absolute inset-0 dot-pattern pointer-events-none z-0" />
 
-      {/* ── Background image (right-half on desktop, subtle full on mobile) ── */}
+      {/* ── Background image (reduced overlay opacity for clarity) ── */}
       {image && (
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 text-gray-500">
+          {/* Unsplash/Local image with softer overlays */}
           <div className="absolute inset-y-0 right-0 w-full lg:w-[58%]">
             <img
               src={image}
@@ -29,16 +30,16 @@ export default function Hero({
               className="w-full h-full object-cover object-center"
               decoding="async"
             />
-            {/* Gradient: fades image into navy from left */}
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/75 to-brand-navy/20 lg:from-brand-navy lg:via-brand-navy/85 lg:to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/80 via-transparent to-brand-navy/30" />
+            {/* Lighter gradients to reduce the "blurred" feel of dark overlays */}
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-navy via-brand-navy/60 to-transparent lg:from-brand-navy lg:via-brand-navy/50 lg:to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-navy/40 via-transparent to-brand-navy/20" />
           </div>
-          {/* Extra mobile overlay */}
-          <div className="absolute inset-0 bg-brand-navy/55 lg:hidden" />
+          {/* Extra mobile overlay - lighter */}
+          <div className="absolute inset-0 bg-brand-navy/35 lg:hidden" />
         </div>
       )}
 
-      {/* No image fallback: richer gradient */}
+      {/* No image fallback */}
       {!image && (
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-navy" />
       )}
@@ -50,24 +51,10 @@ export default function Hero({
       {/* ── Content ── */}
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36 w-full">
         <div
-          className={`flex flex-col gap-6 ${
-            isCenter ? "items-center text-center max-w-3xl mx-auto" : "items-start text-left max-w-[52%] min-w-[320px]"
-          }`}
+          className={`flex flex-col gap-6 ${isCenter ? "items-center text-center max-w-3xl mx-auto" : "items-start text-left max-w-[50%] min-w-[320px]"
+            }`}
         >
-
-          {/* Animated badge */}
-          <div
-            className="inline-flex items-center gap-2.5 bg-white/5 border border-white/12 backdrop-blur-sm rounded-full px-4 py-1.5 animate-fade-in-up"
-            style={{ animationFillMode: "both" }}
-          >
-            <span
-              className="w-1.5 h-1.5 bg-brand-orange rounded-full"
-              style={{ animation: "pulseGlow 2s ease-in-out infinite" }}
-            />
-            <span className="text-brand-orange text-[10px] font-[800] uppercase tracking-[0.22em]">
-              Est. 2023 · Dakar, Senegal
-            </span>
-          </div>
+          {/* Badge Removed per user request */}
 
           {/* Title */}
           {title && (
