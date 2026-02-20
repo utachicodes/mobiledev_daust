@@ -13,6 +13,7 @@ const { width, height } = Dimensions.get('window');
 // Responsive board size: Use slightly less of the width (80% instead of 90%)
 // and also cap it based on height to ensure it fits comfortably on all screens.
 const BOARD_SIZE = Math.min(width * 0.8, height * 0.45, 400);
+// Ensure SQUARE_SIZE is exactly 1/3 of the BOARD_SIZE to prevent wrapping issues
 const SQUARE_SIZE = BOARD_SIZE / 3;
 
 // TicTacToeBoard Component: Renders the 3x3 grid and handles square animations
@@ -103,7 +104,8 @@ const TicTacToeBoard: React.FC<TicTacToeBoardProps> = ({ board, onPress, winning
 
 const styles = StyleSheet.create({
     boardContainer: {
-        padding: 10,
+        // Reduced container padding to prioritize the 1/3 math of square sizes
+        padding: 4,
         borderRadius: 24,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 10 },
@@ -112,20 +114,21 @@ const styles = StyleSheet.create({
         elevation: 10,
     },
     board: {
-        width: BOARD_SIZE - 20,
-        height: BOARD_SIZE - 20,
+        width: BOARD_SIZE,
+        height: BOARD_SIZE,
         flexDirection: 'row',
         flexWrap: 'wrap',
         borderRadius: 16,
         overflow: 'hidden',
     },
     square: {
-        width: (BOARD_SIZE - 20) / 3 - 2,
-        height: (BOARD_SIZE - 20) / 3 - 2,
-        margin: 1,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
+        // Using borderWidth on the square instead of margin on the container 
+        // helps maintain the pixel-perfect 3x3 grid layout
+        borderWidth: 1,
+        borderColor: 'transparent',
     },
     squareText: {
         fontSize: 48,
