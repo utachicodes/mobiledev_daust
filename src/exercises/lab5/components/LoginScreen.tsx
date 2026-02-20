@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { useRouter } from 'expo-router';
 
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useAuth();
+    const router = useRouter();
     const { colors } = useTheme();
     const [loading, setLoading] = useState(false);
 
@@ -19,6 +21,7 @@ const LoginScreen = () => {
         setLoading(true);
         try {
             await login(username, password);
+            router.replace('/(app)');
         } catch (error) {
             Alert.alert('Login Failed', 'Invalid credentials or network error');
         } finally {
