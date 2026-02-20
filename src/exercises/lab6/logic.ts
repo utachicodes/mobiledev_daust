@@ -1,67 +1,96 @@
+/**
+ * logic.ts
+ * This file contains the core "brain" of the Tic-Tac-Toe game.
+ * It handles checking for winners, identifying draws, and the AI logic.
+ */
+
 export type Player = 'X' | 'O';
 export type SquareValue = Player | null;
 export type GameBoard = SquareValue[];
 
+/**
+ * All possible ways to win a Tic-Tac-Toe game (3 in a row).
+ * Each array represents indices in the 9-element board array.
+ */
 export const WINNING_COMBINATIONS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
     [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
     [0, 4, 8], [2, 4, 6]             // Diagonals
 ];
 
+/**
+ * Determines if there is a winner or a draw on the current board.
+ * Returns 'X', 'O', 'Draw', or null if the game is still ongoing.
+ */
 export const checkWinner = (board: GameBoard): Player | 'Draw' | null => {
+    // Check all winning combinations
     for (const [a, b, c] of WINNING_COMBINATIONS) {
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             return board[a] as Player;
         }
     }
+
+    // If no winner, check if there are any empty squares left
     if (board.every(square => square !== null)) {
         return 'Draw';
     }
+
+    // Game is still in progress
     return null;
 };
 
-// Minimax algorithm for computer AI
-export const getBestMove = (board: GameBoard, aiPlayer: Player): number => {
-    const opponent = aiPlayer === 'X' ? 'O' : 'X';
+/**
+ * MINIMAX ALGORITHM
+ * This is a recursive function that simulates all possible future moves
+ * to find the absolute best move for the computer.
+ */
+const minimax = (board: GameBoard, depth: number, isMaximizing: boolean): number => {
+    const winner = checkWinner(board);
 
-    const minimax = (currentBoard: GameBoard, isMaximizing: boolean): number => {
-        const winner = checkWinner(currentBoard);
-        if (winner === aiPlayer) return 10;
-        if (winner === opponent) return -10;
-        if (winner === 'Draw') return 0;
+    // Base cases: return a score based on the outcome
+    if (winner === 'O') return 10 - depth; // Computer wins (higher score is better)
+    if (winner === 'X') return depth - 10; // Human wins (lower score is better)
+    if (winner === 'Draw') return 0;       // Tie score
 
-        if (isMaximizing) {
-            let bestScore = -Infinity;
-            for (let i = 0; i < 9; i++) {
-                if (currentBoard[i] === null) {
-                    currentBoard[i] = aiPlayer;
-                    const score = minimax(currentBoard, false);
-                    currentBoard[i] = null;
-                    bestScore = Math.max(score, bestScore);
-                }
+    if (isMaximizing) {
+        // Computer's turn: try to maximize the score
+        let bestScore = -Infinity;
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === null) {
+                board[i] = 'O'; // Simulate move
+                const score = minimax(board, depth + 1, false);
+                board[i] = null; // Undo move
+                bestScore = Math.max(score, bestScore);
             }
-            return bestScore;
-        } else {
-            let bestScore = Infinity;
-            for (let i = 0; i < 9; i++) {
-                if (currentBoard[i] === null) {
-                    currentBoard[i] = opponent;
-                    const score = minimax(currentBoard, true);
-                    currentBoard[i] = null;
-                    bestScore = Math.min(score, bestScore);
-                }
-            }
-            return bestScore;
         }
-    };
+        return bestScore;
+    } else {
+        // Human's turn: human will try to minimize computer's score
+        let bestScore = Infinity;
+        for (let i = 0; i < 9; i++) {
+            if (board[i] === null) {
+                board[i] = 'X'; // Simulate move
+                const score = minimax(board, depth + 1, true);
+                board[i] = null; // Undo move
+                bestScore = Math.min(score, bestScore);
+            }
+        }
+        return bestScore;
+    }
+};
 
+/**
+ * Calculates the best possible move for the computer ('O').
+ * It uses the minimax algorithm to guarantee it never loses if played perfectly.
+ */
+export const getBestMove = (board: GameBoard): number => {
     let bestScore = -Infinity;
     let move = -1;
 
     for (let i = 0; i < 9; i++) {
         if (board[i] === null) {
-            board[i] = aiPlayer;
-            const score = minimax(board, false);
+            board[i] = 'O';
+            const score = minimax(board, 0, false);
             board[i] = null;
             if (score > bestScore) {
                 bestScore = score;
@@ -70,7 +99,7 @@ export const getBestMove = (board: GameBoard, aiPlayer: Player): number => {
         }
     }
 
-    // Fallback just in case
+    // Fallback just in case no move was found (shouldn't happen in a valid game state)
     if (move === -1) {
         move = board.findIndex(s => s === null);
     }

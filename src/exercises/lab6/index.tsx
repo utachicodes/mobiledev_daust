@@ -13,7 +13,7 @@ type GameMode = 'Friend' | 'Computer' | null;
 // This file handles the game state, AI logic coordination, and the overall UI layout.
 export default function Lab6() {
     // Access the current theme colors (light/dark)
-    const { colors, toggleTheme } = useTheme();
+    const { theme, colors, toggleTheme } = useTheme();
 
     // gameMode: null (landing), 'Friend' (2-player), 'Computer' (vs AI)
     const [gameMode, setGameMode] = useState<GameMode>(null);
@@ -82,7 +82,7 @@ export default function Lab6() {
         if (gameMode === 'Computer' && currentPlayer === 'O' && !winner) {
             const timeout = setTimeout(() => {
                 // Use Minimax algorithm to find the best possible move
-                const move = getBestMove(board, 'O');
+                const move = getBestMove(board);
                 if (move !== -1) handlePress(move);
             }, 600); // 600ms delay to make it feel more "human"
             return () => clearTimeout(timeout);
@@ -136,18 +136,17 @@ export default function Lab6() {
                             </TouchableOpacity>
                         </View>
 
-                        {/* Theme Switcher at the bottom of landing */}
                         <TouchableOpacity
                             style={[styles.themeToggle, { backgroundColor: colors.card }]}
                             onPress={toggleTheme}
                         >
                             <Ionicons
-                                name={colors.background === '#121212' ? "sunny" : "moon"}
+                                name={theme === 'dark' ? "sunny" : "moon"}
                                 size={20}
                                 color={colors.primary}
                             />
                             <Text style={[styles.themeToggleText, { color: colors.text }]}>
-                                {colors.background === '#121212' ? 'Switch to Light' : 'Switch to Dark'}
+                                {theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -179,7 +178,7 @@ export default function Lab6() {
                         onPress={toggleTheme}
                     >
                         <Ionicons
-                            name={colors.background === '#121212' ? "sunny" : "moon"}
+                            name={theme === 'dark' ? "sunny" : "moon"}
                             size={20}
                             color={colors.primary}
                         />

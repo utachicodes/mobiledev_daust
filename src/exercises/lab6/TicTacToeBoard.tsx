@@ -9,64 +9,70 @@ interface TicTacToeBoardProps {
     winningLine: number[] | null;
 }
 
-const { width } = Dimensions.get('window');
-const BOARD_SIZE = width * 0.9;
+const { width, height } = Dimensions.get('window');
+// Responsive board size: Use slightly less of the width (80% instead of 90%)
+// and also cap it based on height to ensure it fits comfortably on all screens.
+const BOARD_SIZE = Math.min(width * 0.8, height * 0.45, 400);
 const SQUARE_SIZE = BOARD_SIZE / 3;
 
 // TicTacToeBoard Component: Renders the 3x3 grid and handles square animations
+// Props:
+// - board: Current state of the game (array of 9)
+// - onPress: Function called when a square is clicked
+// - winningLine: Array of indices that won the game (or null)
 const TicTacToeBoard: React.FC<TicTacToeBoardProps> = ({ board, onPress, winningLine }) => {
-    // Access theme colors for styling
+    // Access theme colors so the board stays visible in both light and dark mode
     const { colors } = useTheme();
 
-    // Helper function to render an individual square on the board
+    /**
+     * renderSquare: Creates an individual clickable square
+     * We define it inside to have access to props and local state easily.
+     */
     const renderSquare = (index: number) => {
-        // Check if this square is part of the winning combination
         const isWinningSquare = winningLine?.includes(index);
-        // Get the value of the square ('X', 'O', or null)
         const value = board[index];
 
-        // Animation reference for the appearance of X or O
-        // useRef ensures the animation state persists across re-renders
+        // Animated value for the smooth pop-in effect of X and O
         const scaleAnim = useRef(new Animated.Value(0)).current;
 
-        // Trigger animation when the square gets a value
+        // UseEffect listens for changes in the square's value
         useEffect(() => {
             if (value) {
-                // Animated.spring creates a "bouncy" effect
+                // When a value (X or O) is set, animate its scale from 0 to 1
                 Animated.spring(scaleAnim, {
-                    toValue: 1,         // Target scale is 100%
-                    useNativeDriver: true, // Offload animation to the native thread for performance
-                    friction: 5,        // Controls how much the bounce "resists"
-                    tension: 40,       // Controls the "speed" of the bounce
+                    toValue: 1,
+                    useNativeDriver: true,
+                    friction: 5,
+                    tension: 40,
                 }).start();
             } else {
-                // Reset scale to 0 if square is cleared
                 scaleAnim.setValue(0);
             }
-        }, [value]); // Re-run effect only when 'value' changes
+        }, [value]);
 
         return (
             <TouchableOpacity
                 key={index}
+                activeOpacity={0.7}
                 style={[
                     styles.square,
                     {
-                        backgroundColor: colors.card, // Square color matches the theme card color
+                        backgroundColor: colors.card, // Individual squares use theme's card color
+                        width: SQUARE_SIZE,
+                        height: SQUARE_SIZE,
                     },
-                    // If it's a winning square, give it a subtle highlight
-                    isWinningSquare && { backgroundColor: colors.primary + '22' }
+                    // Give winning squares a subtle primary-colored background tint
+                    isWinningSquare && { backgroundColor: colors.primary + '33' }
                 ]}
-                onPress={() => onPress(index)} // Trigger the move selection in parent
-                // Disable button if cell is already filled or game is over
+                onPress={() => onPress(index)}
                 disabled={value !== null || winningLine !== null}
             >
-                {/* Only render X or O if value is not null */}
                 {value && (
                     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
                         <Text
                             style={[
                                 styles.squareText,
-                                // Red color for X, Blue color for O
+                                // Color markers: Red for player, Blue for computer
                                 { color: value === 'X' ? '#FF3B30' : '#007AFF' }
                             ]}
                         >
@@ -79,10 +85,16 @@ const TicTacToeBoard: React.FC<TicTacToeBoardProps> = ({ board, onPress, winning
     };
 
     return (
-        // Main container for the board with a subtle border/shadow effect
-        <View style={[styles.boardContainer, { backgroundColor: colors.border + '50' }]}>
+        // The container provides the background for the "grid lines" (spacing between squares)
+        <View style={[styles.boardContainer, {
+            backgroundColor: colors.border,
+            width: BOARD_SIZE + 4, // Extra 4 pixels for the border/spacing
+            height: BOARD_SIZE + 4,
+            borderRadius: 16,
+            overflow: 'hidden'
+        }]}>
             <View style={styles.board}>
-                {/* Loop through the 9-element array and render each square */}
+                {/* map through the board array and render each item as a Square */}
                 {board.map((_, index) => renderSquare(index))}
             </View>
         </View>
