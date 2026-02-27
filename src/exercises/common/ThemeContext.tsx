@@ -78,7 +78,13 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 export const useTheme = () => {
     const context = useContext(ThemeContext);
     if (context === undefined) {
-        throw new Error('useTheme must be used within a ThemeProvider');
+        // Return default light theme instead of crashing when provider is not ready
+        return {
+            theme: 'light' as ThemeType,
+            colors: themes.light,
+            toggleTheme: () => {},
+            isLoaded: false,
+        };
     }
     return context;
 };
