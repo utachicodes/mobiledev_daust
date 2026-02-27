@@ -113,6 +113,14 @@ function DrawerLayout() {
                     drawerIcon: ({ color, size }) => <Ionicons name="checkmark-circle" size={size} color={color} />,
                 }}
             />
+            <Drawer.Screen
+                name="(app)/test2"
+                options={{
+                    drawerLabel: 'Test 2: Map & Weather',
+                    title: 'Map & Weather',
+                    drawerIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
+                }}
+            />
         </Drawer>
     );
 }

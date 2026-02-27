@@ -21,8 +21,21 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.anonymous.MobileDevClass"
+      "package": "com.anonymous.MobileDevClass",
+      "config": {
+        "googleMaps": {
+          "apiKey": "YOUR_GOOGLE_MAPS_API_KEY"
+        }
+      }
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Used to show weather at your current location."
+        }
+      ]
+    ],
     "scheme": "mobiledevclass",
     "web": {
       "favicon": "./assets/favicon.png"
