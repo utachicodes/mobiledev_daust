@@ -113,6 +113,14 @@ function DrawerLayout() {
                     drawerIcon: ({ color, size }) => <Ionicons name="checkmark-circle" size={size} color={color} />,
                 }}
             />
+            <Drawer.Screen
+                name="utachi-map"
+                options={{
+                    drawerLabel: "Utachi's Map",
+                    title: "Utachi's Map",
+                    drawerIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
+                }}
+            />
         </Drawer>
     );
 }

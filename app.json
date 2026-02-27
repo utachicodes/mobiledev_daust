@@ -23,6 +23,14 @@
       "edgeToEdgeEnabled": true,
       "package": "com.anonymous.MobileDevClass"
     },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Used to show weather at your current location."
+        }
+      ]
+    ],
     "scheme": "mobiledevclass",
     "web": {
       "favicon": "./assets/favicon.png"
