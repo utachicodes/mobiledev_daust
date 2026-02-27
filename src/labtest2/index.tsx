@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Switch } from 'react-native';
 import * as Location from 'expo-location';
 import { useNavigation } from 'expo-router';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
@@ -15,7 +15,7 @@ const DEFAULT_COORDS: Coordinates = { latitude: 36.7372, longitude: 3.0865 };
 const DEFAULT_NAME = 'Algiers, Algeria';
 
 export default function LabTest2() {
-  const { theme, colors } = useTheme();
+  const { theme, colors, toggleTheme } = useTheme();
   const navigation = useNavigation<DrawerNavigationProp<any>>();
   const mapRef = useRef<LeafletMapRef>(null);
 
@@ -101,6 +101,20 @@ export default function LabTest2() {
         markerTitle={locationName.split(',')[0]}
       />
 
+      <View style={[styles.themeSwitcher, { backgroundColor: colors.card, borderColor: colors.border }]}
+      >
+        <Text style={{ color: colors.text, fontSize: 13, fontWeight: '600' }}>
+          Dark
+        </Text>
+        <Switch
+          value={theme === 'dark'}
+          onValueChange={toggleTheme}
+          trackColor={{ false: '#767577', true: colors.primary }}
+          thumbColor={theme === 'dark' ? '#fff' : '#f4f3f4'}
+          ios_backgroundColor="#3e3e3e"
+        />
+      </View>
+
       {/* Location permission denied banner */}
       {permDenied && (
         <View style={[styles.banner, { backgroundColor: colors.primary }]}>
@@ -138,5 +152,18 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 9,
     alignItems: 'center',
+  },
+  themeSwitcher: {
+    position: 'absolute',
+    top: 60,
+    right: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 999,
+    borderWidth: 1,
+    zIndex: 10,
   },
 });
