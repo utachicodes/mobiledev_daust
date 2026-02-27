@@ -114,10 +114,10 @@ function DrawerLayout() {
                 }}
             />
             <Drawer.Screen
-                name="(app)/test2"
+                name="utachi-map"
                 options={{
-                    drawerLabel: 'Test 2: Map & Weather',
-                    title: 'Map & Weather',
+                    drawerLabel: "Utachi's Map",
+                    title: "Utachi's Map",
                     drawerIcon: ({ color, size }) => <Ionicons name="map" size={size} color={color} />,
                 }}
             />
