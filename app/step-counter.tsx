@@ -56,8 +56,7 @@ export default function StepCounterScreen() {
         goalRef.current = goal;
 
         if (currentSteps >= goal && !goalReachedRef.current && isTrackingRef.current) {
-            goalReachedRef.current = true;
-            setGoalReached(true);
+            console.log(`Step goal reached: ${currentSteps} / ${goal}`);
             notifyGoalReached(currentSteps, goal);
         }
     }, [currentSteps, goal]);
@@ -124,6 +123,10 @@ export default function StepCounterScreen() {
     }
 
     async function notifyGoalReached(steps: number, goalValue: number) {
+        if (goalReachedRef.current) return;
+        goalReachedRef.current = true;
+        setGoalReached(true);
+
         try {
             await sendStepGoalNotification(steps, goalValue);
         } catch (e) {
