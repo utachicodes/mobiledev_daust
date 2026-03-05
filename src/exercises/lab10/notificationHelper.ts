@@ -46,10 +46,14 @@ export async function requestNotificationPermissions(): Promise<boolean> {
 
 /**
  * Schedule a repeating water reminder notification.
- * @param intervalSeconds - interval in seconds between reminders
+ * @param intervalSeconds - interval in seconds between reminders (minimum 60s for repeating)
  * @returns notification identifier
  */
 export async function scheduleWaterReminder(intervalSeconds: number): Promise<string> {
+    // Note: Expo/iOS require at least 60 seconds for repeating intervals
+    if (intervalSeconds < 60) {
+        console.warn('Repeating interval should be at least 60 seconds.');
+    }
     // Cancel existing water reminders first
     await cancelWaterReminders();
 

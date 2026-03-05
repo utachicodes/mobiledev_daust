@@ -19,7 +19,7 @@ import {
 } from '../src/exercises/lab10/notificationHelper';
 
 const INTERVAL_OPTIONS = [
-    { label: '30 seconds (test)', value: 30 },
+    { label: '60 seconds (test)', value: 60 },
     { label: '15 minutes', value: 15 * 60 },
     { label: '30 minutes', value: 30 * 60 },
     { label: '1 hour', value: 60 * 60 },
