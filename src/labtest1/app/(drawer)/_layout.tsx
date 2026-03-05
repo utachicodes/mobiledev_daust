@@ -1,4 +1,5 @@
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { Drawer } from 'expo-router/drawer';
 import { ThemeProvider, useTheme } from '../../../exercises/lab3/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';

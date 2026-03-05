@@ -29,6 +29,14 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Used to show weather at your current location."
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#4A90D9",
+          "sounds": []
+        }
       ]
     ],
     "scheme": "mobiledevclass",

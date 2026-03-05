@@ -3,10 +3,34 @@ import { AuthProvider } from '../src/exercises/lab5/contexts/AuthContext';
 import { ThemeProvider, useTheme } from '../src/exercises/common/ThemeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import * as Notifications from 'expo-notifications';
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
 
 // Component to handle the Drawer layout once themes are available
 function DrawerLayout() {
     const { colors } = useTheme();
+    const router = useRouter();
+
+    useEffect(() => {
+        // Handle notification clicks
+        const subscription = Notifications.addNotificationResponseReceivedListener((response) => {
+            const data = response.notification.request.content.data;
+            if (data?.screen === 'water-reminder') {
+                router.push('/reminder');
+            } else if (data?.screen === 'stats') {
+                router.push({
+                    pathname: '/stats',
+                    params: {
+                        steps: data.steps as string,
+                        goal: data.goal as string
+                    },
+                });
+            }
+        });
+
+        return () => subscription.remove();
+    }, []);
 
     return (
         <Drawer
@@ -103,6 +127,14 @@ function DrawerLayout() {
                     drawerLabel: 'Lab 6: Tic-Tac-Toe',
                     title: 'Game Lab',
                     drawerIcon: ({ color, size }) => <Ionicons name="grid-outline" size={size} color={color} />,
+                }}
+            />
+            <Drawer.Screen
+                name="(app)/labs/lab10"
+                options={{
+                    drawerLabel: 'Lab 10: Notifications',
+                    title: 'Lab 10',
+                    drawerIcon: ({ color, size }) => <Ionicons name="notifications" size={size} color={color} />,
                 }}
             />
             <Drawer.Screen
