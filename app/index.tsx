@@ -1,5 +1,6 @@
-import Lab6 from '../src/exercises/lab6';
+import { Redirect } from 'expo-router';
 
 export default function RootIndex() {
-    return <Lab6 />;
+    // Redirect to (app) which handles auth check
+    return <Redirect href="/(app)" />;
 }

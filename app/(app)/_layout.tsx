@@ -1,47 +1,34 @@
-import { Redirect, Stack } from 'expo-router';
-import { useAuth } from '../../src/exercises/lab5/contexts/AuthContext';
-import { ActivityIndicator, View } from 'react-native';
+import { Stack } from 'expo-router';
 import { useTheme } from '../../src/exercises/common/ThemeContext';
 
 export default function AppLayout() {
-    const { isAuthenticated, isLoading } = useAuth();
     const { colors } = useTheme();
-
-    if (isLoading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-                <ActivityIndicator size="large" color={colors.primary} />
-            </View>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return <Redirect href="/login" />;
-    }
 
     return (
         <Stack
             screenOptions={{
-                headerStyle: {
-                    backgroundColor: colors.card,
-                },
+                headerStyle: { backgroundColor: colors.card },
                 headerTintColor: colors.text,
+                headerShadowVisible: false,
             }}
         >
-            {/* The main tab interface */}
-            <Stack.Screen name="tabs" options={{ headerShown: false }} />
+            <Stack.Screen name="index" options={{ headerShown: false }} />
 
-            {/* Dynamic route detail */}
+            <Stack.Screen name="labs/lab1" options={{ title: 'Lab 1: User Profiles' }} />
+            <Stack.Screen name="labs/lab2" options={{ title: 'Lab 2: State & Lists' }} />
+            <Stack.Screen name="labs/lab3" options={{ title: 'Lab 3: Props & Events' }} />
+            <Stack.Screen name="labs/lab4" options={{ title: 'Lab 4: Lifecycle' }} />
+            <Stack.Screen name="labs/lab5" options={{ title: 'Lab 5: Context & Auth' }} />
+            <Stack.Screen name="labs/lab6" options={{ title: 'Lab 6: Tic-Tac-Toe' }} />
+            <Stack.Screen name="labs/lab10" options={{ title: 'Lab 10: Notifications' }} />
+            <Stack.Screen name="labs/labtest3" options={{ title: 'Lab Test 3: Hydration Reminder' }} />
             <Stack.Screen name="labs/lab3/[city]" options={{ title: 'City Details' }} />
 
-            {/* Modal Settings */}
+            <Stack.Screen name="test1" options={{ title: 'Test 1: Project Submission' }} />
+
             <Stack.Screen
                 name="settings"
-                options={{
-                    presentation: 'modal',
-                    title: 'Settings',
-                    headerShown: true
-                }}
+                options={{ presentation: 'modal', title: 'Settings' }}
             />
         </Stack>
     );

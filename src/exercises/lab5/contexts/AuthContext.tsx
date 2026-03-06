@@ -22,22 +22,33 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let isMounted = true;
+
         const loadAuthData = async () => {
             try {
                 const storedToken = await AsyncStorage.getItem(TOKEN_KEY);
                 const storedUser = await AsyncStorage.getItem(USER_KEY);
 
-                if (storedToken && storedUser) {
-                    setToken(storedToken);
-                    setUser(JSON.parse(storedUser));
+                if (isMounted) {
+                    if (storedToken && storedUser) {
+                        setToken(storedToken);
+                        setUser(JSON.parse(storedUser));
+                    }
+                    setIsLoading(false);
                 }
             } catch (error) {
                 console.error('Failed to load auth data:', error);
-            } finally {
-                setIsLoading(false);
+                if (isMounted) {
+                    setIsLoading(false);
+                }
             }
         };
+
         loadAuthData();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     const login = async (username: string, password: string) => {
