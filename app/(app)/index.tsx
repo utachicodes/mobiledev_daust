@@ -11,14 +11,14 @@ export default function Dashboard() {
     const router = useRouter();
 
     const labs = [
-        { title: 'Lab 1: User Profiles', icon: 'person', route: '/tabs/labs/lab1' },
-        { title: 'Lab 2: State & Lists', icon: 'list', route: '/tabs/labs/lab2' },
-        { title: 'Lab 3: Props & Events', icon: 'cloudy', route: '/tabs/labs/lab3' },
-        { title: 'Lab 4: Lifecycle', icon: 'flask', route: '/tabs/labs/lab4' },
-        { title: 'Lab 5: Context & Auth', icon: 'lock-closed', route: '/tabs/labs/lab5' },
-        { title: 'Lab 6: Tic-Tac-Toe', icon: 'grid', route: '/tabs/labs/lab6' },
-        { title: 'Lab Test 3: Hydration Reminder', icon: 'water', route: '/tabs/labs/labtest3' },
-        { title: 'Test 1: Project Submission', icon: 'checkmark-circle', route: '/tabs/test1' },
+        { title: 'Lab 1: User Profiles', icon: 'person', route: '/(app)/labs/lab1' },
+        { title: 'Lab 2: State & Lists', icon: 'list', route: '/(app)/labs/lab2' },
+        { title: 'Lab 3: Props & Events', icon: 'cloudy', route: '/(app)/labs/lab3' },
+        { title: 'Lab 4: Lifecycle', icon: 'flask', route: '/(app)/labs/lab4' },
+        { title: 'Lab 5: Context & Auth', icon: 'lock-closed', route: '/(app)/labs/lab5' },
+        { title: 'Lab 6: Tic-Tac-Toe', icon: 'grid', route: '/(app)/labs/lab6' },
+        { title: 'Lab Test 3: Hydration Reminder', icon: 'water', route: '/(app)/labs/labtest3' },
+        { title: 'Test 1: Project Submission', icon: 'checkmark-circle', route: '/(app)/test1' },
     ];
 
     return (
