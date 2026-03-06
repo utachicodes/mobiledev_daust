@@ -1,6 +1,6 @@
-import LabTest3 from '../src/labtest3';
-import Lab6 from '../src/labtest3';
+import { Redirect } from 'expo-router';
 
 export default function RootIndex() {
-    return <LabTest3 />;
+    // Redirect to (app) which handles auth check
+    return <Redirect href="/(app)" />;
 }
