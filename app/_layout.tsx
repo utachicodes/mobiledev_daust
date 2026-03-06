@@ -1,4 +1,4 @@
-import { Stack } from 'expo-router';
+import { Stack, Redirect } from 'expo-router';
 import { AuthProvider } from '../src/exercises/lab5/contexts/AuthContext';
 import { ThemeProvider, useTheme } from '../src/exercises/common/ThemeContext';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -41,19 +41,11 @@ function RootLayoutContent() {
         );
     }
 
-    return (
-        <Stack screenOptions={{ headerShown: false }}>
-            {isAuthenticated ? (
-                <Stack.Group screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="(app)" options={{ headerShown: false }} />
-                </Stack.Group>
-            ) : (
-                <Stack.Group screenOptions={{ headerShown: false }}>
-                    <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-                </Stack.Group>
-            )}
-        </Stack>
-    );
+    if (!isAuthenticated) {
+        return <Redirect href="/(auth)/login" />;
+    }
+
+    return <Stack screenOptions={{ headerShown: false }} />;
 }
 
 export default function RootLayout() {
