@@ -36,6 +36,7 @@ function RootLayoutContent() {
         }
     }, [router]);
 
+    // Show loading screen only if actually loading
     if (isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
@@ -44,10 +45,12 @@ function RootLayoutContent() {
         );
     }
 
+    // Route to appropriate screen based on auth state
     if (!isAuthenticated) {
         return <Redirect href="/(auth)/login" />;
     }
 
+    // Authenticated - show main app
     return <Stack screenOptions={{ headerShown: false }} />;
 }
 
