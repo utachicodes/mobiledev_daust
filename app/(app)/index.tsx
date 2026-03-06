@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch } from 'react-native';
 import { useTheme } from '../../src/exercises/common/ThemeContext';
 import { useAuth } from '../../src/exercises/lab5/contexts/AuthContext';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Dashboard() {
-    const { colors } = useTheme();
+    const { colors, theme, toggleTheme } = useTheme();
     const { user, logout } = useAuth();
     const router = useRouter();
 
@@ -28,10 +28,19 @@ export default function Dashboard() {
                     <Text style={[styles.greeting, { color: colors.text }]}>Welcome,</Text>
                     <Text style={[styles.userName, { color: colors.primary }]}>{user?.username}!</Text>
                 </View>
-                <View style={{ flexDirection: 'row' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, backgroundColor: colors.card, borderRadius: 8, paddingVertical: 6 }}>
+                        <Ionicons name={theme === 'dark' ? 'moon' : 'sunny'} size={18} color={colors.primary} />
+                        <Switch
+                            value={theme === 'dark'}
+                            onValueChange={toggleTheme}
+                            trackColor={{ false: '#767577', true: colors.primary }}
+                            thumbColor={theme === 'dark' ? '#fff' : '#f4f3f4'}
+                        />
+                    </View>
                     <TouchableOpacity
                         onPress={() => router.push('/settings')}
-                        style={[styles.logoutBtn, { backgroundColor: colors.card, marginRight: 10 }]}
+                        style={[styles.logoutBtn, { backgroundColor: colors.card }]}
                     >
                         <Ionicons name="settings-outline" size={24} color={colors.primary} />
                     </TouchableOpacity>

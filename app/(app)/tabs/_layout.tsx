@@ -63,6 +63,27 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
+                name="labs/lab6"
+                options={{
+                    title: 'Lab 6',
+                    tabBarIcon: ({ color, size }) => <Ionicons name="grid-outline" size={size} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="labs/lab10"
+                options={{
+                    title: 'Lab 10',
+                    tabBarIcon: ({ color, size }) => <Ionicons name="notifications" size={size} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="labs/labtest3"
+                options={{
+                    title: 'LabTest 3',
+                    tabBarIcon: ({ color, size }) => <Ionicons name="water" size={size} color={color} />,
+                }}
+            />
+            <Tabs.Screen
                 name="test1"
                 options={{
                     title: 'Test 1',
