@@ -36,7 +36,7 @@ export default function LabTest3() {
     loadState();
 
     // Set notification handler
-    const subscription = Notifications.addNotificationResponseListener((response) => {
+    const subscription = Notifications.addNotificationResponseReceivedListener((response: Notifications.NotificationResponse) => {
       console.log('Notification tapped:', response);
     });
 
