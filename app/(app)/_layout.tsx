@@ -1,23 +1,8 @@
-import { Redirect, Stack } from 'expo-router';
-import { useAuth } from '../../src/exercises/lab5/contexts/AuthContext';
-import { ActivityIndicator, View } from 'react-native';
+import { Stack } from 'expo-router';
 import { useTheme } from '../../src/exercises/common/ThemeContext';
 
 export default function AppLayout() {
-    const { isAuthenticated, isLoading } = useAuth();
     const { colors } = useTheme();
-
-    if (isLoading) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.background }}>
-                <ActivityIndicator size="large" color={colors.primary} />
-            </View>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return <Redirect href="/login" />;
-    }
 
     return (
         <Stack
@@ -26,6 +11,7 @@ export default function AppLayout() {
                     backgroundColor: colors.card,
                 },
                 headerTintColor: colors.text,
+                headerShadowVisible: false,
             }}
         >
             {/* The main tab interface */}
