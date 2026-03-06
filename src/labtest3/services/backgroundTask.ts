@@ -12,8 +12,6 @@ TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
     if (notificationService.isWithinWorkingHours(now, workingHours.start, workingHours.end)) {
       await notificationService.sendHydrationReminder();
     }
-
-    return TaskManager.TaskManagerTaskBody;
   } catch (error) {
     console.error('Background task error:', error);
   }
