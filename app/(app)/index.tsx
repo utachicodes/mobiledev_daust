@@ -17,6 +17,7 @@ export default function Dashboard() {
         { title: 'Lab 4: Lifecycle', icon: 'flask', route: '/tabs/labs/lab4' },
         { title: 'Lab 5: Context & Auth', icon: 'lock-closed', route: '/tabs/labs/lab5' },
         { title: 'Lab 6: Tic-Tac-Toe', icon: 'grid', route: '/tabs/labs/lab6' },
+        { title: 'Lab Test 3: Hydration Reminder', icon: 'water', route: '/tabs/labs/labtest3' },
         { title: 'Test 1: Project Submission', icon: 'checkmark-circle', route: '/tabs/test1' },
     ];
 
